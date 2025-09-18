@@ -10,4 +10,9 @@
     <ProjectReference Include="..\SistemaCalificacion.Domain\SistemaCalificacion.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Data\" />
+    <Folder Include="Repositories\" />
+  </ItemGroup>
+
 </Project>
