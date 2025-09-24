@@ -1,5 +1,11 @@
 using Microsoft.EntityFrameworkCore;
+using SistemaCalificacion.Application.Interfaces;
+using SistemaCalificacion.Application.Services;
+using SistemaCalificacion.Domain.Interfaces;
 using SistemaCalificacion.Infrastructure.Data;
+using SistemaCalificacion.Infrastructure.Repositories;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +13,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(option=> 
 option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Register the UserRepository with dependency injection
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ILoginService, LoginService>();
 
 var app = builder.Build();
 
@@ -22,6 +32,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseSession();
 
 app.UseAuthorization();
 
