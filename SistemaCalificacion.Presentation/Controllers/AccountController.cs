@@ -8,9 +8,11 @@ namespace SistemaCalificacion.Presentation.Controllers
     public class AccountController : Controller
     {
 
-        public IActionResult Create()
+        private readonly ILoginService _loginService;
+
+        public AccountController(ILoginService loginService)
         {
-            return View();
+            _loginService = loginService;
         }
 
     }
