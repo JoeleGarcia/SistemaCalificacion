@@ -35,6 +35,76 @@ namespace SistemaCalificacion.Presentation.Controllers
             return RedirectToAction("Login", "Account");
         }
 
-        
+        [HttpGet]
+        public IActionResult Login()
+        {
+            var sessionActive = GetSession();
+
+            if (sessionActive != null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            return View();
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(string username, string password)
+        {
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            {
+                ModelState.AddModelError(string.Empty, "Username and password are required.");
+                return View("Index");
+            }
+
+            var isValidUser = await _loginService.LoginAsync(username, password);
+            if (isValidUser)
+            {
+                SetSession(username);
+                TempData["SuccessMessage"] = "Login successful!";
+
+                return RedirectToAction("Index", "Home");
+            }
+            return View("Index");
+        }
+
+        [HttpGet]
+        public IActionResult Register()
+        {
+            var sessionActive = GetSession();
+
+            if (sessionActive != null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterUserDto registerUserDto)
+        {
+            var isRegistered = await _loginService.RegisterAsync(registerUserDto);
+            if (isRegistered)
+            {
+                SetSession(registerUserDto.Username);
+                TempData["SuccessMessage"] = "Registration successful!";
+                return RedirectToAction("Index", "Home");
+            }
+            return View(registerUserDto);
+        }
+
+        public IActionResult Logout()
+        {
+            var sessionActive = GetSession();
+
+            if (sessionActive != null)
+            {
+                ClearSession();
+                TempData["SuccessMessage"] = "You have been logged out successfully.";
+            }
+
+            return RedirectToAction("Index", "Account");
+        }
     }
 }
