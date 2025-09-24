@@ -15,6 +15,14 @@ namespace SistemaCalificacion.Presentation.Controllers
 
         public IActionResult Index()
         {
+            // Verificar si el usuario está autenticado
+            var userId = HttpContext.Session.GetString("isSessionActive");
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            ViewBag.Username = HttpContext.Session.GetString("isSessionActive");
             return View();
         }
 
