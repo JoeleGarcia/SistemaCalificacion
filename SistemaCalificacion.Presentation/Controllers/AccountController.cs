@@ -15,5 +15,26 @@ namespace SistemaCalificacion.Presentation.Controllers
             _loginService = loginService;
         }
 
+        public string? GetSession()
+        {
+            return HttpContext.Session.GetString("isSessionActive");
+        }
+
+        public void SetSession(string username)
+        {
+            HttpContext.Session.SetString("isSessionActive", username);
+        }
+
+        public void ClearSession()
+        {
+            HttpContext.Session.Remove("isSessionActive");
+        }
+
+        public IActionResult Index()
+        {
+            return RedirectToAction("Login", "Account");
+        }
+
+        
     }
 }
