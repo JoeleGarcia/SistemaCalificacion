@@ -55,7 +55,7 @@ namespace SistemaCalificacion.Presentation.Controllers
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
                 ModelState.AddModelError(string.Empty, "Username and password are required.");
-                return View("Index");
+                return View("Login");
             }
 
             var isValidUser = await _loginService.LoginAsync(username, password);
@@ -66,7 +66,10 @@ namespace SistemaCalificacion.Presentation.Controllers
 
                 return RedirectToAction("Index", "Home");
             }
-            return View("Index");
+
+            ModelState.AddModelError(string.Empty, "Verificar Username or password");
+
+            return View("Login");
         }
 
         [HttpGet]
