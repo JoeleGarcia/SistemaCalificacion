@@ -56,13 +56,10 @@ namespace SistemaCalificacion.Infrastructure.Repositories
 
         public async Task<bool> ValidateCredentialsAsync(string username, string password)
         {
-            var user = await _dbcontext.Users.FirstOrDefaultAsync(u => u.Username == username);
+            var user = await _dbcontext.Users.FirstOrDefaultAsync(u => u.Username == username && u.Password.Equals(password));
             if (user != null)
             {
-                if (user.Password == password)
-                {
-                    return true;
-                }
+                return true;
             }
             return false;
         }
