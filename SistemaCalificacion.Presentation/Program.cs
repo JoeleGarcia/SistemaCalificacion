@@ -3,6 +3,8 @@ using SistemaCalificacion.Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
 builder.Services.AddApplication();
 builder.Services.AddPersistence(builder.Configuration);
 
