@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using SistemaCalificacion.Application.Exceptions;
 using SistemaCalificacion.Domain.Entities;
 using SistemaCalificacion.Domain.Interfaces;
 using SistemaCalificacion.Infrastructure.Data;
@@ -22,21 +24,38 @@ namespace SistemaCalificacion.Infrastructure.Repositories
 
         public Task<bool> AddUserAsync(User user)
         {
-
-            _dbcontext.Users.Add(user);
-            var result = _dbcontext.SaveChangesAsync();
-            return Task.FromResult(result.Result > 0);
-
+            try
+            {
+                _dbcontext.Users.Add(user);
+                var result = _dbcontext.SaveChangesAsync();
+                return Task.FromResult(result.Result > 0);
+            }
+            catch (SqlException ex) when (ex.Number == -2) // Timeout específico
+            {
+                throw new InfrastructureException("Timeout al consultar la base de datos", ex);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new InfrastructureException("Error en la consulta de usuario", ex);
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new InfrastructureException("Error en la base de datos", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new InfrastructureException("Error inesperado en la base de datos", ex);
+            }
         }
 
-        public Task<User?> GetByEmailAsync(string email)
+        public async Task<User?> GetByEmailAsync(string email)
         {
-            throw new NotImplementedException();
+            return await _dbcontext.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
 
-        public Task<User?> GetByIdAsync(int id)
+        public async Task<User?> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _dbcontext.Users.FirstOrDefaultAsync(u => u.Id.Equals(id) );
         }
 
         public Task<User?> GetByUsernameAsync(string username)
@@ -54,14 +73,34 @@ namespace SistemaCalificacion.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<bool> ValidateCredentialsAsync(string username, string password)
+        public async Task<User?> ValidateCredentialsAsync(string email, string password)
         {
-            var user = await _dbcontext.Users.FirstOrDefaultAsync(u => u.Username == username && u.Password.Equals(password));
-            if (user != null)
+            try
             {
-                return true;
+                var user = await _dbcontext.Users.FirstOrDefaultAsync(u => u.Email == email && u.Password.Equals(password));
+
+                if (user == null)
+                    return null; // usuario no existe
+
+                return user; // login correcto
             }
-            return false;
+            catch (SqlException ex) when (ex.Number == -2) // Timeout específico
+            {
+                throw new InfrastructureException("Timeout al consultar la base de datos", ex);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new InfrastructureException("Error en la consulta de usuario", ex);
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new InfrastructureException("Error en la base de datos", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new InfrastructureException("Error inesperado en la base de datos", ex);
+            }
+
         }
 
     }
