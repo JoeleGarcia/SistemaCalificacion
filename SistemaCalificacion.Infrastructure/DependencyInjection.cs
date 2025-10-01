@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SistemaCalificacion.Application.Interfaces;
 using SistemaCalificacion.Domain.Interfaces;
 using SistemaCalificacion.Infrastructure.Data;
 using SistemaCalificacion.Infrastructure.Repositories;
@@ -15,6 +16,13 @@ namespace SistemaCalificacion.Infrastructure
             option.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ISessionManager, SessionManagerRepository>();
+
+            services.AddAuthentication().AddCookie("MyCookieAuth", options =>
+            {
+                options.Cookie.Name = "MyCookieAuth";
+                options.LoginPath = "/Account/Login";
+            });
 
             return services;
         }
