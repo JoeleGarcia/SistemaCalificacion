@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SistemaCalificacion.Presentation.Models;
 using System.Diagnostics;
@@ -13,13 +14,14 @@ namespace SistemaCalificacion.Presentation.Controllers
             _logger = logger;
         }
 
+        [Authorize]
         public IActionResult Index()
         {
             // Verificar si el usuario está autenticado
             var userId = HttpContext.Session.GetString("isSessionActive");
             if (userId == null)
             {
-                return RedirectToAction("Login", "Account");
+                return View();
             }
 
             ViewBag.Username = HttpContext.Session.GetString("isSessionActive");

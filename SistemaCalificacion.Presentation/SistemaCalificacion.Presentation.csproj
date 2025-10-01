@@ -7,7 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SistemaCalificacion.Application\SistemaCalificacion.Application.csproj" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.9">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+
+	  <ProjectReference Include="..\SistemaCalificacion.Application\SistemaCalificacion.Application.csproj" />
     <ProjectReference Include="..\SistemaCalificacion.Infrastructure\SistemaCalificacion.Infrastructure.csproj" />
   </ItemGroup>
 

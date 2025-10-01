@@ -1,19 +1,6 @@
-﻿﻿@{
-    ViewData["Title"] = "Home Page";
+@{
+  ViewData["Title"] = "Inicio - Starter Kit";
 }
 
-<div class="text-center">
-    <h1 class="display-4">¡Bienvenido, @ViewBag.Username!</h1>
-    <p>Has iniciado sesión correctamente en la aplicación.</p>
-
-    @if (@TempData["SuccessMessage"] != null)
-    {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            @TempData["SuccessMessage"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    }
-
-    <a class="btn btn-primary" href="@Url.Action("Logout", "Account")">Logout</a>
-    <a class="btn btn-secondary" href="@Url.Action("Index", "Account")">Profile</a>
-</div>
+<h4 class="py-4 mb-6">Page 1</h4>
+<p>Sample page.<br />For more layout options, refer <a href="@TempData.Peek("documentation")" target="_blank" class="fw-bold" rel="noopener noreferrer">Layout docs</a>.</p>

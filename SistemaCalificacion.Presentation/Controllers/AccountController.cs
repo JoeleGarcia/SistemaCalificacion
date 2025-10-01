@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SistemaCalificacion.Application.DTOs;
+using SistemaCalificacion.Application.Exceptions;
 using SistemaCalificacion.Application.Interfaces;
 using SistemaCalificacion.Application.Services;
 
@@ -9,9 +10,11 @@ namespace SistemaCalificacion.Presentation.Controllers
     {
 
         private readonly ILoginService _loginService;
+        private readonly ILogger<AccountController> _logger;
 
-        public AccountController(ILoginService loginService)
+        public AccountController(ILogger<AccountController> logger, ILoginService loginService)
         {
+            _logger = logger;
             _loginService = loginService;
         }
 
@@ -50,26 +53,54 @@ namespace SistemaCalificacion.Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(string username, string password)
+        public async Task<IActionResult> Login(LoginUserDto loginUserDto)
         {
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            try
             {
-                ModelState.AddModelError(string.Empty, "Username and password are required.");
+                if (string.IsNullOrEmpty(loginUserDto.Email) || string.IsNullOrEmpty(loginUserDto.Password))
+                {
+                    ModelState.AddModelError(string.Empty, "Username and password are required.");
+                    return View("Login");
+                }
+
+                var UserData = await _loginService.LoginAsync(loginUserDto.Email, loginUserDto.Password);
+                if (UserData is not null)
+                {
+
+                    _logger.LogInformation("Usuario {Username} inició sesión correctamente", loginUserDto.Email);
+
+                    SetSession(loginUserDto.Email);
+                    TempData["SuccessMessage"] = "Login successful!";
+
+                    return RedirectToAction("Index", "Home");
+                }
+
+                _logger.LogWarning("Intento de login fallido para el usuario {Username}", loginUserDto.Email);
+                ModelState.AddModelError(string.Empty, "Verificar Username or password");
+
+                return View("Login");
+
+            }
+            catch (NotFoundException ex)
+            {
+                ModelState.AddModelError(string.Empty, "Username o password no son válidos.");
                 return View("Login");
             }
-
-            var isValidUser = await _loginService.LoginAsync(username, password);
-            if (isValidUser)
+            catch (ApplicationException ex)
             {
-                SetSession(username);
-                TempData["SuccessMessage"] = "Login successful!";
+                _logger.LogError(ex, "Error");
+                ModelState.AddModelError(string.Empty, "Username o password no son válidos.");
+                return View("Login");
 
-                return RedirectToAction("Index", "Home");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error en Login para el usuario {Username}", loginUserDto?.Email);
+
+                TempData["ErrorMessage"] = "Ocurrió un error inesperado. Intente nuevamente.";
+                return RedirectToAction("Error", "Home");
             }
 
-            ModelState.AddModelError(string.Empty, "Verificar Username or password");
-
-            return View("Login");
         }
 
         [HttpGet]
@@ -87,18 +118,52 @@ namespace SistemaCalificacion.Presentation.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterUserDto registerUserDto)
         {
-            var isRegistered = await _loginService.RegisterAsync(registerUserDto);
-            if (isRegistered)
+
+            try 
             {
-                SetSession(registerUserDto.Username);
-                TempData["SuccessMessage"] = "Registration successful!";
-                return RedirectToAction("Index", "Home");
+                if (!ModelState.IsValid)
+                {
+                    return View("Register", registerUserDto);
+                }
+                var isRegistered = await _loginService.RegisterAsync(registerUserDto);
+                if (isRegistered)
+                {
+                    SetSession(registerUserDto.Username);
+                    TempData["SuccessMessage"] = "Registration successful!";
+                    return RedirectToAction("Index", "Home");
+                }
+
+                return View("Register", registerUserDto);
+                //return RedirectToAction(nameof(Register) , registerUserDto);
             }
-            return View(registerUserDto);
+            catch (NotFoundException ex)
+            {
+                _logger.LogError(ex, "Error");
+                ModelState.AddModelError(string.Empty, "Username o password no son válidos.");
+                return View("Register", registerUserDto);
+            }
+            catch (ApplicationException ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return View("Register", registerUserDto);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error en registrar el usuario {Username}", registerUserDto?.Email);
+
+                TempData["ErrorMessage"] = ex.Message;
+                return RedirectToAction("Error", "Home");
+            }
+            
         }
 
+        [HttpPost]
         public IActionResult Logout()
         {
+
+            _loginService.LogoutAsync();
+
             var sessionActive = GetSession();
 
             if (sessionActive != null)
