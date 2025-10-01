@@ -53,7 +53,7 @@ namespace SistemaCalificacion.Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginUserDto loginUserDto)
+        public async Task<IActionResult> Login(LoginUserDto loginUserDto, string? returnUrl = null)
         {
             try
             {
@@ -69,6 +69,9 @@ namespace SistemaCalificacion.Presentation.Controllers
 
                     _logger.LogInformation("Usuario {Username} inició sesión correctamente", loginUserDto.Email);
 
+                    if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                        return Redirect(returnUrl);
+
                     SetSession(loginUserDto.Email);
                     TempData["SuccessMessage"] = "Login successful!";
 
@@ -83,6 +86,7 @@ namespace SistemaCalificacion.Presentation.Controllers
             }
             catch (NotFoundException ex)
             {
+                _logger.LogError(ex, "Error");
                 ModelState.AddModelError(string.Empty, "Username o password no son válidos.");
                 return View("Login");
             }
@@ -144,7 +148,7 @@ namespace SistemaCalificacion.Presentation.Controllers
             }
             catch (ApplicationException ex)
             {
-                _logger.LogError(ex, ex.Message);
+                _logger.LogError(ex, "Error {Username}", ex.Message);
                 ModelState.AddModelError(string.Empty, ex.Message);
                 return View("Register", registerUserDto);
             }
