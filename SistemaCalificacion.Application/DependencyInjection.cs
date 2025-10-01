@@ -1,6 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.Extensions.DependencyInjection;
+using SistemaCalificacion.Application.DTOs;
 using SistemaCalificacion.Application.Interfaces;
 using SistemaCalificacion.Application.Services;
+using SistemaCalificacion.Application.Validator;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +20,12 @@ namespace SistemaCalificacion.Application
         {
 
             services.AddScoped<ILoginService, LoginService>();
+
+            services.AddScoped<IValidator<LoginUserDto>, LoginUserDtoValidator>();
+            services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
+            services.AddScoped<IValidator<UserDto>, UserDtoValidator>();
+
+            services.AddFluentValidationAutoValidation();
 
             return services;
         }
