@@ -16,7 +16,7 @@ namespace SistemaCalificacion.Domain.Interfaces
         Task<User?> GetByUsernameAsync(string username);
         Task<bool> IsEmailRegisteredAsync(string email);
         Task<bool> IsUsernameRegisteredAsync(string username);
-        Task<bool> ValidateCredentialsAsync(string username, string password);
+        Task<User> ValidateCredentialsAsync(string email, string password);
 
     }
 }
