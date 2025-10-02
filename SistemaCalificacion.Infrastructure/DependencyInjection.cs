@@ -17,6 +17,7 @@ namespace SistemaCalificacion.Infrastructure
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IEstudianteRepository, EstudianteRepository>();
+            services.AddScoped<IPasswordGenerator, PasswordGeneratorRepository>();
 
             services.AddScoped<ISessionManager, SessionManagerRepository>();
 
