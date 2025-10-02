@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using SistemaCalificacion.Application.DTOs;
 using SistemaCalificacion.Application.Exceptions;
 using SistemaCalificacion.Application.Interfaces;
@@ -15,30 +16,34 @@ namespace SistemaCalificacion.Application.Services
     public class EstudianteService : IEstudianteService
     {
         private readonly IEstudianteRepository _estudianteRepository;
+        private readonly IPasswordGenerator _PasswordGeneratorRepository;
 
-        public EstudianteService(IEstudianteRepository estudianteRepository)
+
+        public EstudianteService(IEstudianteRepository estudianteRepository , IPasswordGenerator passwordGenerator)
         {
             _estudianteRepository = estudianteRepository;
+            _PasswordGeneratorRepository = passwordGenerator;
         }
 
         public async Task<EstudianteDto> AddEstudianteAsync(EstudianteDto estudiante)
         {
+
+
             try
             {
-                var _estudiante = new Estudiante
-                {
-                    Nombre = estudiante.Username,
-                    Apellido = estudiante.Password,
-                    Username    = estudiante.Username,
-                    Password =  estudiante.Password,
-                    EmailInsitucional  = estudiante.EmailInstitucional,
-                    EmailPersonal = estudiante.EmailPersonal,
-                    Carrera = estudiante.Carrera,
-                    Cedula = estudiante.Cedula,
-                    Matricula = estudiante.Matricula,
-                    Status = estudiante.Status,
+                var _estudiante = new Estudiante(
+                
+                    nombre: estudiante.Nombre,
+                    apellido: estudiante.Apellido,
+                    username: estudiante.Username,
+                    password: _PasswordGeneratorRepository.GenerarPassword(),
+                    emailInsitucional: estudiante.EmailInstitucional,
+                    emailPersonal: estudiante.EmailPersonal,
+                    carrera: estudiante.Carrera,
+                    cedula: estudiante.Cedula,
+                    matricula: estudiante.Matricula                    
 
-                };
+                );
 
                 var estudianteAgregado = await _estudianteRepository.AddEstudianteAsync(_estudiante);
                 return new EstudianteDto(estudianteAgregado.Id , estudianteAgregado.Nombre, estudianteAgregado.Apellido, estudianteAgregado.Username, estudianteAgregado.EmailInsitucional, estudianteAgregado.EmailPersonal, estudianteAgregado.Password, estudianteAgregado.Matricula, estudianteAgregado.Cedula, estudianteAgregado.Carrera, estudianteAgregado.Role, estudianteAgregado.Status);
@@ -63,6 +68,13 @@ namespace SistemaCalificacion.Application.Services
 
         }
 
+        public async Task<EstudianteDto?> GetEstudianteByIdAsync(Guid id)
+        {
+            var _estudiante = await _estudianteRepository.GetEstudianteByIdAsync(id);
+
+            return new EstudianteDto(_estudiante!.Id, _estudiante.Nombre, _estudiante.Apellido, _estudiante.Username, _estudiante.EmailInsitucional, _estudiante.EmailPersonal, _estudiante.Password, _estudiante.Matricula, _estudiante.Cedula, _estudiante.Carrera, _estudiante.Role, _estudiante.Status);
+        }
+
         public Task<bool> IsEmailEstudianteRegisteredAsync(string email)
         {
             throw new NotImplementedException();
@@ -73,8 +85,10 @@ namespace SistemaCalificacion.Application.Services
             throw new NotImplementedException();
         }
 
-        public Task<bool> UpdateEstudianteAsync(Guid Id, EstudianteDto estudiante)
+        public Task<bool> UpdateEstudianteAsync(Guid Id, UpdateEstudianteDto estudiante)
         {
+            var _estudiante = _estudianteRepository.GetEstudianteByIdAsync(Id);
+
             throw new NotImplementedException();
         }
     }

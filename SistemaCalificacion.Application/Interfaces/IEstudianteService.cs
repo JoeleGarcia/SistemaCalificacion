@@ -11,9 +11,10 @@ namespace SistemaCalificacion.Application.Interfaces
     public interface IEstudianteService
     {
         Task<EstudianteDto> AddEstudianteAsync(EstudianteDto estudiante);
-        Task<bool> UpdateEstudianteAsync(Guid Id, EstudianteDto estudiante);
-        Task DeleteEstudianteByIdAsync(Guid id);
+        Task<bool> UpdateEstudianteAsync(Guid Id, UpdateEstudianteDto updateEstudiante);
+        Task DeleteEstudianteByIdAsync(Guid Id);
         Task<IEnumerable<EstudianteDto>> GetAllEstudianteAsync();
+        Task<EstudianteDto?> GetEstudianteByIdAsync(Guid Id);
         Task<bool> IsEmailEstudianteRegisteredAsync(string email);
         Task<bool> IsUsernameEstudianteRegisteredAsync(string username);
 
