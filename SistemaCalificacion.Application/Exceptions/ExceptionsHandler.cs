@@ -14,11 +14,17 @@ namespace SistemaCalificacion.Application.Exceptions
         }
     }
 
+    public class InvalidArgumentException : Exception
+    {
+        public InvalidArgumentException(string message, string param ) : base(message) { }
+    }
+
     public class InfrastructureException : Exception
     {
         public InfrastructureException(string message, Exception innerException)
             : base(message, innerException)
         {
         }
+
     }
 }
