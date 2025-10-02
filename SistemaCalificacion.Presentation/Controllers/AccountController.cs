@@ -39,8 +39,9 @@ namespace SistemaCalificacion.Presentation.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login()
+        public IActionResult Login(string? returnUrl = null)
         {
+            ViewData["ReturnUrl"] = returnUrl;
             var sessionActive = GetSession();
 
             if (sessionActive != null)
