@@ -14,6 +14,8 @@ namespace SistemaCalificacion.Infrastructure.Data
 
         public ApplicationDbContext( DbContextOptions<ApplicationDbContext> options) : base(options) { }
         public DbSet<User> Users { get; set; }
+        public DbSet<Estudiante> Estudiante { get; set; }
+
 
         //https://learn.microsoft.com/en-us/ef/core/modeling/indexes?tabs=data-annotations
         protected override void OnModelCreating(ModelBuilder builder)
