@@ -1,0 +1,75 @@
+﻿@model SistemaCalificacion.Application.DTOs.EstudianteDto
+
+@{
+
+    ViewData["Title"] = "Add";
+
+    var _updateError = ViewData.ModelState["_addError"]?.Errors
+    .Select(e => e.ErrorMessage).FirstOrDefault(); ;
+}
+
+<h1>Editar</h1>
+
+<h4>EstudianteDto</h4>
+<hr />
+
+<form asp-action="Update" method="post">
+    <!-- Campo oculto con el Id del estudiante -->
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group">
+        <label asp-for="Nombre"></label>
+        <input asp-for="Nombre" class="form-control" />
+        <span asp-validation-for="Nombre" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Apellido"></label>
+        <input asp-for="Apellido" class="form-control" />
+        <span asp-validation-for="Apellido" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Username"></label>
+        <input asp-for="Username" class="form-control" />
+        <span asp-validation-for="Username" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="EmailInstitucional"></label>
+        <input asp-for="EmailInstitucional" class="form-control" />
+        <span asp-validation-for="EmailInstitucional" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="EmailPersonal"></label>
+        <input asp-for="EmailPersonal" class="form-control" />
+        <span asp-validation-for="EmailPersonal" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Carrera"></label>
+        <input asp-for="Carrera" class="form-control" />
+        <span asp-validation-for="Carrera" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Cedula"></label>
+        <input asp-for="Cedula" class="form-control" />
+        <span asp-validation-for="Cedula" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Matricula"></label>
+        <input asp-for="Matricula" class="form-control" />
+        <span asp-validation-for="Matricula" class="text-danger"></span>
+    </div>
+
+    <div class="form-group form-check">
+        <input class="form-check-input" asp-for="Status" />
+        <label class="form-check-label" asp-for="Status"></label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>

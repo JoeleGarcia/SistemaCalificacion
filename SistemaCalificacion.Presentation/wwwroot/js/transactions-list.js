@@ -262,11 +262,20 @@ document.addEventListener('DOMContentLoaded', function (e) {
                   ]
                 },
                 {
-                  text: '<i class="icon-base ri ri-add-line icon-sm me-0 me-sm-2"></i><span class="d-none d-sm-inline-block">Add New User</span>',
-                  className: 'add-new btn btn-primary',
-                  action: function (e, dt, button, config) {
-                    window.location.href = '/Transactions/Add';
-                  }
+
+                  //text: '<i class="icon-base ri ri-add-line icon-sm me-0 me-sm-2"></i><span class="d-none d-sm-inline-block">Agregar Nuevo Estudiante</span>',
+                  //className: 'add-new btn btn-primary',
+                  //action: function (e, dt, button, config) {
+                  //  window.location.href = '/Estudiantes/Add';
+                  //}
+
+                    text: '<i class="icon-base ri ri-add-line icon-sm me-0 me-sm-2 d-sm-none d-inline-block"></i><span class="d-none d-sm-inline-block">Agregar Nuevo Estudiante</span>',
+                    className: 'add-new btn btn-primary',
+                    attr: {
+                        'data-bs-toggle': 'offcanvas',
+                        'data-bs-target': '#offcanvasAddUser'
+                    }
+
                 }
               ]
             }

@@ -1,17 +1,40 @@
 ﻿@model SistemaCalificacion.Application.DTOs.EstudianteDto
 
 @{
+
     ViewData["Title"] = "Add";
+
+    var _addError = ViewData.ModelState["_addError"]?.Errors
+    .Select(e => e.ErrorMessage).FirstOrDefault(); ;
 }
 
 <h1>Add</h1>
 
 <h4>EstudianteDto</h4>
 <hr />
+
+@if (@TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    @TempData.Remove("SuccessMessage");
+}
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Add">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            @*<div asp-validation-summary="ModelOnly" class="text-danger"></div>*@
+            @if (_addError is not null)
+            {
+                <div class="alert alert-solid-danger d-flex align-items-center flex-wrap row-gap-2" role="alert">
+                    <span class="alert-icon rounded">
+                        <i class="icon-base ri ri-error-warning-line icon-md"></i>
+                    </span>
+                    @_addError
+                </div>
+            }
 
             <div class="form-group">
                 <label asp-for="Nombre" class="control-label"></label>
@@ -40,7 +63,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
+                <input asp-for="Password" type="password" class="form-control" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -59,15 +82,15 @@
                 <span asp-validation-for="Carrera" class="text-danger"></span>
             </div>
             @*<div class="form-group">
-                <label asp-for="Role" class="control-label"></label>
-                <input asp-for="Role" class="form-control" />
-                <span asp-validation-for="Role" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Status" /> @Html.DisplayNameFor(model => model.Status)
-                </label>
-            </div>*@
+            <label asp-for="Role" class="control-label"></label>
+            <input asp-for="Role" class="form-control" />
+            <span asp-validation-for="Role" class="text-danger"></span>
+        </div>
+        <div class="form-group form-check">
+            <label class="form-check-label">
+                <input class="form-check-input" asp-for="Status" /> @Html.DisplayNameFor(model => model.Status)
+            </label>
+        </div>*@
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

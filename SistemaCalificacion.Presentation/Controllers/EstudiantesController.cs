@@ -54,6 +54,29 @@ namespace SistemaCalificacion.Presentation.Controllers
         public IActionResult Add()
         {
 
+            //return PartialView("_Add");
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Update(Guid id)
+        {
+            //await Task.Yield(); // o Task.CompletedTask si no quieres simular nada
+            await Task.CompletedTask;
+
+            var _estudiante = await _estudianteService.GetEstudianteByIdAsync(id);
+
+            return View(_estudiante);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Update(Guid id, UpdateEstudianteDto updateEstudianteDto)
+        {
+            //await Task.Yield(); // o Task.CompletedTask si no quieres simular nada
+            await Task.CompletedTask;
+
+            await _estudianteService.UpdateEstudianteAsync(id, updateEstudianteDto);
+
             return View();
         }
 
@@ -93,8 +116,8 @@ namespace SistemaCalificacion.Presentation.Controllers
             {
                 _logger.LogError(ex, "Error en registrar el usuario {Username}", estudianteDto?.EmailInstitucional);
 
-                TempData["ErrorMessage"] = ex.Message;
-                return RedirectToAction("Error", "Home");
+                ModelState.AddModelError("_addError", ex.Message);
+                return View("Add", estudianteDto);
             }
 
         }
