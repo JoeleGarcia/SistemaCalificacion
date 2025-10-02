@@ -1,0 +1,243 @@
+﻿@model IEnumerable<SistemaCalificacion.Application.DTOs.EstudianteDto>;
+@using Newtonsoft.Json;
+
+@{
+    ViewData["Title"] = "Estudiante - CRUD";
+    ViewData["statusClass"] = "";
+}
+
+@section VendorStyles {
+    <link rel="stylesheet" href="~/vendor/libs/datatables-bs5/datatables.bootstrap5.css" />
+    <link rel="stylesheet" href="~/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css" />
+    <link rel="stylesheet" href="~/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css" />
+    <link rel="stylesheet" href="~/vendor/libs/sweetalert2/sweetalert2.css" />
+    <link rel="stylesheet" href="~/vendor/libs/&#64;form-validation/form-validation.css" />
+}
+
+@section VendorScripts {
+    <script src="~/vendor/libs/moment/moment.js"></script>
+    <script src="~/vendor/libs/datatables-bs5/datatables-bootstrap5.js"></script>
+    <script src="~/vendor/libs/sweetalert2/sweetalert2.js"></script>
+    <script src="~/vendor/libs/&#64;form-validation/popular.js"></script>
+    <script src="~/vendor/libs/&#64;form-validation/bootstrap5.js"></script>
+    <script src="~/vendor/libs/&#64;form-validation/auto-focus.js"></script>
+    <script src="~/vendor/libs/cleave-zen/cleave-zen.js"></script>
+}
+
+
+@section PageScripts {
+    <script src="~/js/transactions-delete.js"></script>
+    <script src="~/js/transactions-list.js"></script>
+}
+
+<script type="text/javascript">
+     @ViewBag.JavascriptToRun
+
+     function ShowErrorPopup() {
+          alert('Sorry, we could not process your order.');
+     }
+
+</script>
+
+@if (TempData.ContainsKey("TransactionsToast") && TempData.ContainsKey("DisplayToast") && (bool?)TempData["DisplayToast"] == true)
+{
+    var transactionsToastJson = TempData["TransactionsToast"] as string;
+    if (!string.IsNullOrEmpty(transactionsToastJson))
+    {
+        var transactionsToast = JsonConvert.DeserializeObject<List<TransactionsToast>>(transactionsToastJson);
+
+        // Check if transactionsToast is not null before proceeding
+        if (transactionsToast?.Count > 0)
+        {
+            // Display the toast
+            <div class="toast-container end-0 m-1 me-4">
+                @foreach (var toast in transactionsToast)
+                {
+                    <div class="toast @toast.CssClass" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="true" data-delay="2000">
+                        <div class="toast-body text-center text-white">
+                            @toast.Message
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    }
+
+    // Remove TempData flag to prevent displaying the toast on subsequent page reloads
+    TempData.Remove("DisplayToast");
+
+}
+
+<div class="card">
+    <div class="card-datatable table-responsive pb-0">
+        <table id="transactionsTable" class="table">
+            <thead>
+                <tr class="text-nowrap">
+                    <th></th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Nombre)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Apellido)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Carrera)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Username)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Matricula)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Status)
+                    </th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model?.Any() == true)
+                {
+                    @foreach (var estudianes in Model)
+                    {
+                        string statusClass = "info"; // Default value if item.Status is null or doesn't match any case
+
+                        bool lowerCaseStatus = estudianes.Status;
+
+                        if (lowerCaseStatus.Equals(true))
+                        {
+                            statusClass = "success";
+                        }
+                        else if (lowerCaseStatus.Equals(false))
+                        {
+                            statusClass = "warning";
+                        }
+
+                        <tr>
+                            <td></td>
+                            <td class="text-nowrap fw-medium text-heading">
+                                @Html.DisplayFor(modelItem => estudianes.Nombre)
+                            </td>
+                            <td class="text-nowrap fw-medium text-heading">
+                                @Html.DisplayFor(modelItem => estudianes.Apellido)
+                            </td>
+                            <td>
+                                @estudianes.Carrera
+                            </td>
+                            <td>
+                                @estudianes.Username
+                            </td>
+                            <td>
+                                @estudianes.Matricula
+                            </td>
+                            <td>
+                                <div class="badge bg-label-@statusClass rounded-pill">
+
+
+                                    @if (estudianes.Status.Equals(true))
+                                    {
+                                        @("Activo");
+
+                                    }
+
+                                    @if (estudianes.Status.Equals(false))
+                                    {
+                                        @("Inactivo");
+                                    }
+
+                                </div>
+                            </td>
+                            <td class="text-nowrap">
+                                <a asp-action="Update" asp-route-id="@estudianes.Id" class="btn btn-sm btn-text-secondary rounded-pill btn-icon shadow-none"><i class='icon-base ri ri-edit-line icon-18px'></i></a>
+                                <a href="/Estudiantes/Delete/@estudianes.Id" class="btn btn-sm btn-text-secondary rounded-pill btn-icon shadow-none delete-transaction" data-transaction-username="@Html.DisplayFor(modelItem => estudianes.Nombre)"><i class="icon-base ri ri-delete-bin-5-line icon-18px"></i></a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasAddUser" aria-labelledby="offcanvasAddUserLabel">
+        <div class="offcanvas-header border-bottom">
+            <h5 id="offcanvasAddUserLabel" class="offcanvas-title">Agregar estudiante</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body mx-0 flex-grow-0 h-100">
+
+            @*<form class="add-new-user pt-0" id="addNewUserForm" onsubmit="return false">
+            <div class="form-floating form-floating-outline mb-5 form-control-validation">
+                <input type="text" class="form-control" id="add-user-fullname" placeholder="John Doe" name="userFullname" aria-label="John Doe" />
+                <label for="add-user-fullname">Full Name</label>
+            </div>
+            <div class="form-floating form-floating-outline mb-5 form-control-validation">
+                <input type="text" id="add-user-email" class="form-control" placeholder="john.doe&#64;example.com" aria-label="john.doe&#64;example.com" name="userEmail" />
+                <label for="add-user-email">Email</label>
+            </div>
+            <div class="form-floating form-floating-outline mb-5">
+                <input type="text" id="add-user-contact" class="form-control phone-mask" placeholder="+1 (609) 988-44-11" aria-label="john.doe&#64;example.com" name="userContact" />
+                <label for="add-user-contact">Contact</label>
+            </div>
+            <div class="form-floating form-floating-outline mb-5">
+                <input type="text" id="add-user-company" class="form-control" placeholder="Web Developer" aria-label="jdoe1" name="companyName" />
+                <label for="add-user-company">Company</label>
+            </div>
+            <div class="form-floating form-floating-outline mb-5">
+                <select id="country" class="select2 form-select">
+                    <option value="">Select</option>
+                    <option value="Australia">Australia</option>
+                    <option value="Bangladesh">Bangladesh</option>
+                    <option value="Belarus">Belarus</option>
+                    <option value="Brazil">Brazil</option>
+                    <option value="Canada">Canada</option>
+                    <option value="China">China</option>
+                    <option value="France">France</option>
+                    <option value="Germany">Germany</option>
+                    <option value="India">India</option>
+                    <option value="Indonesia">Indonesia</option>
+                    <option value="Israel">Israel</option>
+                    <option value="Italy">Italy</option>
+                    <option value="Japan">Japan</option>
+                    <option value="Korea">Korea, Republic of</option>
+                    <option value="Mexico">Mexico</option>
+                    <option value="Philippines">Philippines</option>
+                    <option value="Russia">Russian Federation</option>
+                    <option value="South Africa">South Africa</option>
+                    <option value="Thailand">Thailand</option>
+                    <option value="Turkey">Turkey</option>
+                    <option value="Ukraine">Ukraine</option>
+                    <option value="United Arab Emirates">United Arab Emirates</option>
+                    <option value="United Kingdom">United Kingdom</option>
+                    <option value="United States">United States</option>
+                </select>
+                <label for="country">Country</label>
+            </div>
+            <div class="form-floating form-floating-outline mb-5">
+                <select id="user-role" class="form-select">
+                    <option value="subscriber">Subscriber</option>
+                    <option value="editor">Editor</option>
+                    <option value="maintainer">Maintainer</option>
+                    <option value="author">Author</option>
+                    <option value="admin">Admin</option>
+                </select>
+                <label for="user-role">User Role</label>
+            </div>
+            <div class="form-floating form-floating-outline mb-5">
+                <select id="user-plan" class="form-select">
+                    <option value="basic">Basic</option>
+                    <option value="enterprise">Enterprise</option>
+                    <option value="company">Company</option>
+                    <option value="team">Team</option>
+                </select>
+                <label for="user-plan">Select Plan</label>
+            </div>
+            <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Submit</button>
+            <button type="reset" class="btn btn-outline-danger" data-bs-dismiss="offcanvas">Cancel</button>
+        </form>*@
+
+        </div>
+    </div>
+
+</div>
