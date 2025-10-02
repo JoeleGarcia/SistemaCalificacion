@@ -16,6 +16,8 @@ namespace SistemaCalificacion.Infrastructure
             option.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IEstudianteRepository, EstudianteRepository>();
+
             services.AddScoped<ISessionManager, SessionManagerRepository>();
 
             services.AddAuthentication().AddCookie("MyCookieAuth", options =>
