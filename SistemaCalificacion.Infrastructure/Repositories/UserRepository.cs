@@ -40,7 +40,7 @@ namespace SistemaCalificacion.Infrastructure.Repositories
             }
             catch (DbUpdateException ex)
             {
-                throw new InfrastructureException("Error en la base de datos", ex);
+                throw new InfrastructureException(ex.Message, ex);
             }
             catch (Exception ex)
             {
@@ -73,14 +73,14 @@ namespace SistemaCalificacion.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<User?> ValidateCredentialsAsync(string email, string password)
+        public async Task<User> ValidateCredentialsAsync(string email, string password)
         {
             try
             {
                 var user = await _dbcontext.Users.FirstOrDefaultAsync(u => u.Email == email && u.Password.Equals(password));
 
                 if (user == null)
-                    return null; // usuario no existe
+                    return null!; // usuario no existe
 
                 return user; // login correcto
             }
