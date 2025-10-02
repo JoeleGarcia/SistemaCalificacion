@@ -9,13 +9,13 @@ namespace SistemaCalificacion.Domain.Interfaces
 {
     public interface IEstudianteRepository
     {
-        Task<bool> AddEstudianteAsync(Estudiante estudiante);
-        Task<bool> UpdateEstudianteAsync(Estudiante estudiante);
+        Task<Estudiante> AddEstudianteAsync(Estudiante estudiante);
+        Task UpdateEstudianteAsync(Estudiante estudiante);
         Task<IEnumerable<Estudiante>> GetAllEstudianteAsync();
-        Task<User?> DeleteEstudianteByIdAsync(int id);
-        Task<User?> GetEstudianteByIdAsync(int id);
-        Task<User?> GetEstudianteByEmailAsync(string email);
-        Task<User?> GetEstudianteByUsernameAsync(string username);
+        Task DeleteEstudianteByIdAsync(Guid id);
+        Task<Estudiante?> GetEstudianteByIdAsync(Guid id);
+        Task<Estudiante?> GetEstudianteByEmailAsync(string email);
+        Task<Estudiante?> GetEstudianteByUsernameAsync(string username);
         Task<bool> IsEmailEstudianteRegisteredAsync(string email);
         Task<bool> IsUsernameEstudianteRegisteredAsync(string username);
     }
