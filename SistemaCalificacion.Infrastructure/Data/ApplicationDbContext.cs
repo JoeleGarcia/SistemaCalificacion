@@ -24,8 +24,10 @@ namespace SistemaCalificacion.Infrastructure.Data
                 entity.HasIndex(e => e.Email).IsUnique();
             });
 
-            builder.Entity<Estudiante>().HasAlternateKey(r => r.Cedula );
-            
+            builder.Entity<Estudiante>(entity => {
+                entity.HasIndex(e => e.Cedula).IsUnique();
+            });
+
         }
 
     }
