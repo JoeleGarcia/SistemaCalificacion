@@ -19,6 +19,7 @@ namespace SistemaCalificacion.Application
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
 
+            services.AddScoped<IEstudianteService, EstudianteService>();
             services.AddScoped<ILoginService, LoginService>();
 
             services.AddScoped<IValidator<LoginUserDto>, LoginUserDtoValidator>();
