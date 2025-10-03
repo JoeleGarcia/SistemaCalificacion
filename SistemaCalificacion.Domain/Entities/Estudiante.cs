@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace SistemaCalificacion.Domain.Entities
 {
@@ -61,11 +63,28 @@ namespace SistemaCalificacion.Domain.Entities
             Id = Guid.NewGuid();
             CreatedAt = DateTime.UtcNow;
             UpdatedAt = DateTime.UtcNow;
-            //Role = "Estudiante";
+            Role = "Estudiante";
             //Status = true;
         }
 
-       
+        public void UpdateCampos(string nombre, string apellido, string username, string emailInsitucional, string emailPersonal, string carrera, string cedula, string matricula, bool status = true)
+        {
+            if (string.IsNullOrWhiteSpace(cedula.ToString()))
+                throw new ArgumentException("La Cedula no puede esta vacio");
 
+            if (cedula.ToString().Length != 11)
+                throw new ArgumentException("La Cedula tiene que ser de 11 Digitos");
+
+            Nombre = nombre.Trim();
+            Apellido = apellido.Trim();
+            Username = username.Trim();
+            EmailInsitucional = emailInsitucional;
+            EmailPersonal = emailPersonal;
+            Cedula = cedula;
+            Carrera = carrera;
+            Matricula = matricula;
+            Status = status;
+
+        }
     }
 }

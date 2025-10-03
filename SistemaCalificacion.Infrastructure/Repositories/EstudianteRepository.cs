@@ -85,9 +85,10 @@ namespace SistemaCalificacion.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public Task UpdateEstudianteAsync(Estudiante estudiante)
+        public async Task UpdateEstudianteAsync(Estudiante estudiante)
         {
-            throw new NotImplementedException();
+            _dbcontext.Estudiante.Update(estudiante);
+            await _dbcontext.SaveChangesAsync();
         }
 
         public async Task<Estudiante?> GetEstudianteByIdAsync(Guid id)

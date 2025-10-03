@@ -85,11 +85,30 @@ namespace SistemaCalificacion.Application.Services
             throw new NotImplementedException();
         }
 
-        public Task<bool> UpdateEstudianteAsync(Guid Id, UpdateEstudianteDto estudiante)
+        public async Task<bool> UpdateEstudianteAsync(Guid Id, UpdateEstudianteDto estudiante)
         {
-            var _estudiante = _estudianteRepository.GetEstudianteByIdAsync(Id);
+            var _estudiante = await _estudianteRepository.GetEstudianteByIdAsync(Id);
 
-            throw new NotImplementedException();
+            if (_estudiante is null)
+            {
+                return false;
+            }
+
+            _estudiante.UpdateCampos(
+                nombre: estudiante.Nombre,
+                apellido: estudiante.Apellido,
+                username: estudiante.Username,
+                emailInsitucional: estudiante.EmailInstitucional,
+                emailPersonal: estudiante.EmailPersonal,
+                matricula: estudiante.Matricula,
+                cedula: estudiante.Cedula,
+                carrera: estudiante.Carrera,
+                status: estudiante.Status
+             );
+
+            await _estudianteRepository.UpdateEstudianteAsync(_estudiante);
+
+            return true;
         }
     }
 }

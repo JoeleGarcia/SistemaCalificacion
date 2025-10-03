@@ -72,12 +72,16 @@ namespace SistemaCalificacion.Presentation.Controllers
         [HttpPost]
         public async Task<IActionResult> Update(Guid id, UpdateEstudianteDto updateEstudianteDto)
         {
-            //await Task.Yield(); // o Task.CompletedTask si no quieres simular nada
-            await Task.CompletedTask;
 
+            if (!ModelState.IsValid)
+            {
+                return View("Update", updateEstudianteDto);
+            }
+            //await Task.Yield(); // o Task.CompletedTask si no quieres simular nada
+            //await Task.CompletedTask;
             await _estudianteService.UpdateEstudianteAsync(id, updateEstudianteDto);
 
-            return View();
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
