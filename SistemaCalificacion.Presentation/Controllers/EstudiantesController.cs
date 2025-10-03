@@ -9,14 +9,7 @@ using SistemaCalificacion.Presentation.Models;
 
 namespace SistemaCalificacion.Presentation.Controllers
 {
-
-    public class EstudiantesViewModel
-    {
-        public IEnumerable<EstudianteDto> ?estudianteDtos { get; set; }
-        public IEnumerable<TransactionsToast> ?transactionsToasts { get; set; }
-        // Puedes agregar más colecciones aquí
-    }
-
+      
     public class EstudiantesController : Controller
     {
         private readonly IEstudianteService _estudianteService;
@@ -61,7 +54,7 @@ namespace SistemaCalificacion.Presentation.Controllers
         [HttpGet]
         public async Task<IActionResult> Update(Guid id)
         {
-            //await Task.Yield(); // o Task.CompletedTask si no quieres simular nada
+
             await Task.CompletedTask;
 
             var _estudiante = await _estudianteService.GetEstudianteByIdAsync(id);
@@ -77,8 +70,7 @@ namespace SistemaCalificacion.Presentation.Controllers
             {
                 return View("Update", updateEstudianteDto);
             }
-            //await Task.Yield(); // o Task.CompletedTask si no quieres simular nada
-            //await Task.CompletedTask;
+
             await _estudianteService.UpdateEstudianteAsync(id, updateEstudianteDto);
 
             return RedirectToAction(nameof(Index));
