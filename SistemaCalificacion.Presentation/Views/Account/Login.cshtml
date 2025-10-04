@@ -15,7 +15,7 @@
             @TempData["SuccessMessage"]
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-        @*@TempData.Remove("SuccessMessage");*@
+        @TempData.Remove("SuccessMessage");
     }
     <div class="col-md-4">
         <form asp-action="Login">
