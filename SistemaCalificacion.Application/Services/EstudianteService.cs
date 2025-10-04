@@ -91,20 +91,19 @@ namespace SistemaCalificacion.Application.Services
 
             if (_estudiante is null)
             {
-                return false;
+                throw new NotFoundException("Estudiante", Id);
             }
 
-            _estudiante.UpdateCampos(
-                nombre: estudiante.Nombre,
-                apellido: estudiante.Apellido,
-                username: estudiante.Username,
-                emailInsitucional: estudiante.EmailInstitucional,
-                emailPersonal: estudiante.EmailPersonal,
-                matricula: estudiante.Matricula,
-                cedula: estudiante.Cedula,
-                carrera: estudiante.Carrera,
-                status: estudiante.Status
-             );
+            _estudiante.Nombre          = estudiante.Nombre;
+            _estudiante.Apellido        = estudiante.Apellido;
+            _estudiante.Username        = estudiante.Username;
+            _estudiante.EmailInsitucional  = estudiante.EmailInstitucional;
+            _estudiante.EmailPersonal   = estudiante.EmailPersonal;
+            _estudiante.Matricula       = estudiante.Matricula;
+            _estudiante.Cedula          = estudiante.Cedula;
+            _estudiante.Carrera         = estudiante.Carrera;
+            _estudiante.Status          = estudiante.Status;
+            _estudiante.UpdatedAt       = DateTime.UtcNow;
 
             await _estudianteRepository.UpdateEstudianteAsync(_estudiante);
 
