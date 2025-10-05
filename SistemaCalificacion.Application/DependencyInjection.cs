@@ -19,12 +19,14 @@ namespace SistemaCalificacion.Application
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
 
+            services.AddScoped<IMateriaService, MateriaService>();
             services.AddScoped<IEstudianteService, EstudianteService>();
             services.AddScoped<ILoginService, LoginService>();
 
             services.AddScoped<IValidator<LoginUserDto>, LoginUserDtoValidator>();
             services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
             services.AddScoped<IValidator<UserDto>, UserDtoValidator>();
+            services.AddAutoMapper(typeof(DependencyInjection).Assembly);
 
             services.AddFluentValidationAutoValidation();
 
