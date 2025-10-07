@@ -1,0 +1,147 @@
+﻿@model IEnumerable<SistemaCalificacion.Application.DTOs.MateriaDto>;
+@using Newtonsoft.Json;
+
+@{
+    ViewData["Title"] = "Materias - CRUD";
+    ViewData["statusClass"] = "";
+
+}
+
+@section VendorStyles {
+    <link rel="stylesheet" href="~/vendor/libs/datatables-bs5/datatables.bootstrap5.css" />
+    <link rel="stylesheet" href="~/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css" />
+    <link rel="stylesheet" href="~/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css" />
+    <link rel="stylesheet" href="~/vendor/libs/sweetalert2/sweetalert2.css" />
+    <link rel="stylesheet" href="~/vendor/libs/&#64;form-validation/form-validation.css" />
+}
+
+@section VendorScripts {
+    <script src="~/vendor/libs/moment/moment.js"></script>
+    <script src="~/vendor/libs/datatables-bs5/datatables-bootstrap5.js"></script>
+    <script src="~/vendor/libs/sweetalert2/sweetalert2.js"></script>
+    <script src="~/vendor/libs/&#64;form-validation/popular.js"></script>
+    <script src="~/vendor/libs/&#64;form-validation/bootstrap5.js"></script>
+    <script src="~/vendor/libs/&#64;form-validation/auto-focus.js"></script>
+    <script src="~/vendor/libs/cleave-zen/cleave-zen.js"></script>
+}
+
+
+@section PageScripts {
+    <script src="~/js/materia-delete.js"></script>
+    <script src="~/js/materia-list.js"></script>
+}
+
+@*<div asp-validation-summary="ModelOnly" class="text-danger"></div>*@
+@if (TempData["MateriaError"] is string msg)
+{
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        @msg
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    @TempData.Remove("MateriaError");
+}
+
+<div class="card">
+    <div class="card-datatable table-responsive pb-0">
+        <table id="transactionsTable" class="table">
+            <thead>
+                <tr class="text-nowrap">
+                    <th></th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Nombre)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Descripcion)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Status)
+                    </th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model?.Any() == true)
+                {
+                    @foreach (var materias in Model)
+                    {
+                        string statusClass = "info"; // Default value if item.Status is null or doesn't match any case
+
+                        bool lowerCaseStatus = materias.Status;
+
+                        if (lowerCaseStatus.Equals(true))
+                        {
+                            statusClass = "success";
+                        }
+                        else if (lowerCaseStatus.Equals(false))
+                        {
+                            statusClass = "warning";
+                        }
+
+                        <tr>
+                            <td></td>
+                            <td class="text-nowrap fw-medium text-heading">
+                                @Html.DisplayFor(modelItem => materias.Nombre)
+                            </td>
+                            <td class="text-nowrap fw-medium text-heading">
+                                @Html.DisplayFor(modelItem => materias.Descripcion)
+                            </td>
+                            <td>
+                                <div class="badge bg-label-@statusClass rounded-pill">
+
+
+                                    @if (materias.Status.Equals(true))
+                                    {
+                                        @("Activo");
+
+                                    }
+
+                                    @if (materias.Status.Equals(false))
+                                    {
+                                        @("Inactivo");
+                                    }
+
+                                </div>
+                            </td>
+                            <td class="text-nowrap">
+                                <a asp-action="Update" asp-route-id="@materias.Id" class="btn btn-sm btn-text-secondary rounded-pill btn-icon shadow-none"><i class='icon-base ri ri-edit-line icon-18px'></i></a>
+                                <a href="/Materias/Delete/@materias.Id" class="btn btn-sm btn-text-secondary rounded-pill btn-icon shadow-none delete-transaction" data-transaction-username="@Html.DisplayFor(modelItem => materias.Nombre)"><i class="icon-base ri ri-delete-bin-5-line icon-18px"></i></a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasAddUser" aria-labelledby="offcanvasAddUserLabel">
+        <div class="offcanvas-header border-bottom">
+            <h5 id="offcanvasAddUserLabel" class="offcanvas-title">Agregar Materias</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body mx-0 flex-grow-0 h-100">
+
+            <form asp-action="Add" asp-controller="Materias" method="post">
+                <div class="form-group">
+                    <label for="Nombre">Nombre</label>
+                    <input type="text" name="Nombre" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                    <label for="Descripcion">Descripcion</label>
+                    <input type="text" name="Descripcion" class="form-control" />
+                </div>
+                <div class="form-group form-check">
+                    <input class="form-check-input" type="checkbox" data-val="true" data-val-required="The Status field is required." id="Status" name="Status" value="true">
+                    <label class="form-check-label" for="Status">Status</label>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Crear" class="btn btn-primary" />
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+</div>

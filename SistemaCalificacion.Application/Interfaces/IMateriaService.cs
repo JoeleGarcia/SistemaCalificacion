@@ -12,7 +12,7 @@ namespace SistemaCalificacion.Application.Interfaces
     {
         Task<IEnumerable<MateriaDto>> GetAllMateriaAsync();
         Task<MateriaDto> GetMateriaByIdAsync(int id);
-        Task<CreateMateriaDto> CreateMateriaAsync(CreateMateriaDto createMateriaDto);
+        Task<CreateMateriaDto> AddMateriaAsync(CreateMateriaDto createMateriaDto);
         Task UpdateMateriaAsync(int id, UpdateMateriaDto updateMateriaDto);
         Task DeleteMateriaAsync(int id);
     }

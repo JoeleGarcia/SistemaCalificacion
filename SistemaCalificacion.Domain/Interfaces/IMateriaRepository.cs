@@ -9,10 +9,10 @@ namespace SistemaCalificacion.Domain.Interfaces
 {
     public interface IMateriaRepository
     {
-        Task<IEnumerable<Materia>> GetAllMateriatsAsync();
-        Task<Materia> GetMateriaByIdAsync(int id);
-        Task<Materia> CreateMateriaAsync(Materia materia);
+        Task<IEnumerable<Materia>> GetAllMateriaAsync();
+        Task<Materia?> GetMateriaByIdAsync(int id);
+        Task<Materia> AddMateriaAsync(Materia materia);
         Task UpdateMateriaAsync(Materia materia);
-        Task DeleteMateriaAsync(Materia materia);
+        Task DeleteMateriaAsync(int id);
     }
 }

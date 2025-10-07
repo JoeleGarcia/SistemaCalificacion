@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using SistemaCalificacion.Application.DTOs;
+using SistemaCalificacion.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,17 +9,12 @@ using System.Threading.Tasks;
 
 namespace SistemaCalificacion.Application.Mapping
 {
-    public class DtoToDtoMapping : Profile
+    public class DtoToDomainMapping : Profile
     {
+        public DtoToDomainMapping() {
 
-        public DtoToDtoMapping() {
-
-            CreateMap<EstudianteDto, UpdateEstudianteDto>();
-            CreateMap<CreateEstudianteDto, EstudianteDto>();
-
-            CreateMap<MateriaDto, UpdateMateriaDto>();
+            CreateMap<CreateMateriaDto, Materia>();
 
         }
-
     }
 }
