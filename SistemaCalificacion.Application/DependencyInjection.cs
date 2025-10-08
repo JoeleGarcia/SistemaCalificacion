@@ -20,6 +20,7 @@ namespace SistemaCalificacion.Application
         {
 
             services.AddScoped<IMateriaService, MateriaService>();
+            services.AddScoped<ICalificacionesService, CalificacionesService>();
             services.AddScoped<IEstudianteService, EstudianteService>();
             services.AddScoped<ILoginService, LoginService>();
 

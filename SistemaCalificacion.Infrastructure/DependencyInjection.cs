@@ -16,6 +16,7 @@ namespace SistemaCalificacion.Infrastructure
             option.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
             services.AddScoped<IMateriaRepository, MateriaRepository>();
+            services.AddScoped<ICalificacionesRepository, CalificacionesRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IEstudianteRepository, EstudianteRepository>();
             services.AddScoped<IPasswordGenerator, PasswordGeneratorRepository>();
