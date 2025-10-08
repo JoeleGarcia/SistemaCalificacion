@@ -1,4 +1,5 @@
-﻿@model SistemaCalificacion.Application.DTOs.EstudianteDto
+﻿@model SistemaCalificacion.Application.DTOs.UpdateEstudianteDto
+
 
 @{
 
@@ -14,7 +15,7 @@
 <hr />
 
 <form asp-action="Update" method="post">
-    <!-- Campo oculto con el Id del estudiante -->
+
     <input type="hidden" asp-for="Id" />
 
     <div class="form-group">

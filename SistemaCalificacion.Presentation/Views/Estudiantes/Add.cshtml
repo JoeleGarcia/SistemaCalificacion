@@ -1,4 +1,4 @@
-﻿@model SistemaCalificacion.Application.DTOs.EstudianteDto
+﻿@model SistemaCalificacion.Application.DTOs.CreateEstudianteDto
 
 @{
 
@@ -21,11 +21,11 @@
     </div>
     @TempData.Remove("SuccessMessage");
 }
-<div class="row">
+<!--<div class="row">
     <div class="col-md-4">
         <form asp-action="Add">
 
-            @*<div asp-validation-summary="ModelOnly" class="text-danger"></div>*@
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             @if (_addError is not null)
             {
                 <div class="alert alert-solid-danger d-flex align-items-center flex-wrap row-gap-2" role="alert">
@@ -34,9 +34,10 @@
                     </span>
                     @_addError
                 </div>
-            }
+            }-->
+            @*<input type="hidden" asp-for="Id" />*@
 
-            <div class="form-group">
+            <!--<div class="form-group">
                 <label asp-for="Nombre" class="control-label"></label>
                 <input asp-for="Nombre" class="form-control" />
                 <span asp-validation-for="Nombre" class="text-danger"></span>
@@ -62,11 +63,6 @@
                 <span asp-validation-for="EmailPersonal" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" type="password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="Matricula" class="control-label"></label>
                 <input asp-for="Matricula" class="form-control" />
                 <span asp-validation-for="Matricula" class="text-danger"></span>
@@ -80,23 +76,93 @@
                 <label asp-for="Carrera" class="control-label"></label>
                 <input asp-for="Carrera" class="form-control" />
                 <span asp-validation-for="Carrera" class="text-danger"></span>
-            </div>
+            </div>-->
+            @*<div class="form-group form-check">
+                <input class="form-check-input" asp-for="Status" />
+                <label class="form-check-label" asp-for="Status"></label>
+            </div>*@
+            <!--<div class="form-group form-check">
+                <input class="form-check-input" asp-for="Status" data-val="true" data-val-required="The Status field is required." id="Status" name="Status" value="true">
+                <label class="form-check-label" asp-for="Status"></label>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>-->
             @*<div class="form-group">
             <label asp-for="Role" class="control-label"></label>
             <input asp-for="Role" class="form-control" />
             <span asp-validation-for="Role" class="text-danger"></span>
-        </div>
-        <div class="form-group form-check">
+        </div>*@
+            @*<div class="form-group form-check">
             <label class="form-check-label">
-                <input class="form-check-input" asp-for="Status" /> @Html.DisplayNameFor(model => model.Status)
+                <input class="form-check-input" asp-for="Status" />
             </label>
         </div>*@
-            <div class="form-group">
+            <!--<div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
-</div>
+</div>-->
+
+
+
+<form asp-action="Add" method="post">
+
+    <div class="form-group">
+        <label asp-for="Nombre"></label>
+        <input asp-for="Nombre" class="form-control" />
+        <span asp-validation-for="Nombre" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Apellido"></label>
+        <input asp-for="Apellido" class="form-control" />
+        <span asp-validation-for="Apellido" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Username"></label>
+        <input asp-for="Username" class="form-control" />
+        <span asp-validation-for="Username" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="EmailInstitucional"></label>
+        <input asp-for="EmailInstitucional" class="form-control" />
+        <span asp-validation-for="EmailInstitucional" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="EmailPersonal"></label>
+        <input asp-for="EmailPersonal" class="form-control" />
+        <span asp-validation-for="EmailPersonal" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Carrera"></label>
+        <input asp-for="Carrera" class="form-control" />
+        <span asp-validation-for="Carrera" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Cedula"></label>
+        <input asp-for="Cedula" class="form-control" />
+        <span asp-validation-for="Cedula" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Matricula"></label>
+        <input asp-for="Matricula" class="form-control" />
+        <span asp-validation-for="Matricula" class="text-danger"></span>
+    </div>
+
+    <div class="form-group form-check">
+        <input asp-for="Status" class="form-check-input" />
+        <label asp-for="Status" class="form-check-label"></label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>
 
 <div>
     <a asp-action="Index">Back to List</a>

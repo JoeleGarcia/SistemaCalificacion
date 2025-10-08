@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SistemaCalificacion.Application.DTOs;
 using SistemaCalificacion.Application.Exceptions;
 using SistemaCalificacion.Application.Interfaces;
 using SistemaCalificacion.Application.Services;
+using SistemaCalificacion.Domain.Entities;
 using SistemaCalificacion.Presentation.Models;
 
 namespace SistemaCalificacion.Presentation.Controllers
@@ -14,11 +16,13 @@ namespace SistemaCalificacion.Presentation.Controllers
     {
         private readonly IEstudianteService _estudianteService;
         private readonly ILogger<AccountController> _logger;
+        private readonly IMapper _mapper;
 
-        public EstudiantesController(ILogger<AccountController> logger, IEstudianteService estudianteService)
+        public EstudiantesController(ILogger<AccountController> logger, IEstudianteService estudianteService , IMapper mapper)
         {
             _logger = logger;
             _estudianteService = estudianteService;
+            _mapper = mapper;
         }
 
         [Authorize]
@@ -55,11 +59,10 @@ namespace SistemaCalificacion.Presentation.Controllers
         public async Task<IActionResult> Update(Guid id)
         {
 
-            await Task.CompletedTask;
-
             var _estudiante = await _estudianteService.GetEstudianteByIdAsync(id);
+            var updateEstudiante = _mapper.Map<UpdateEstudianteDto>(_estudiante);
 
-            return View(_estudiante);
+            return View(updateEstudiante);
         }
 
         [HttpPost]
@@ -68,6 +71,7 @@ namespace SistemaCalificacion.Presentation.Controllers
 
             if (!ModelState.IsValid)
             {
+
                 return View("Update", updateEstudianteDto);
             }
 
@@ -77,43 +81,43 @@ namespace SistemaCalificacion.Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(EstudianteDto estudianteDto)
+        public async Task<IActionResult> Add(CreateEstudianteDto createEstudianteDto)
         {
 
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    return View("Add", estudianteDto);
+                    return View("Add", createEstudianteDto);
                 }
 
-                var estaAgregado = await _estudianteService.AddEstudianteAsync(estudianteDto);
+                var estaAgregado = await _estudianteService.AddEstudianteAsync(createEstudianteDto);
                 if (estaAgregado is not null)
                 {
                     return RedirectToAction(nameof(Index));
                 }
 
-                return View("Add", estudianteDto);
+                return View("Add", createEstudianteDto);
                 //return RedirectToAction(nameof(Register) , registerUserDto);
             }
             catch (NotFoundException ex)
             {
                 _logger.LogError(ex, "Error");
                 ModelState.AddModelError(string.Empty, "Username o password no son válidos.");
-                return View("Add", estudianteDto);
+                return View("Add", createEstudianteDto);
             }
             catch (ApplicationException ex)
             {
                 _logger.LogError(ex, "Error {Username}", ex.Message);
                 ModelState.AddModelError(string.Empty, ex.Message);
-                return View("Add", estudianteDto);
+                return View("Add", createEstudianteDto);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error en registrar el usuario {Username}", estudianteDto?.EmailInstitucional);
+                _logger.LogError(ex, "Error en registrar el usuario {Username}", createEstudianteDto?.EmailInstitucional);
 
                 ModelState.AddModelError("_addError", ex.Message);
-                return View("Add", estudianteDto);
+                return View("Add", createEstudianteDto);
             }
 
         }
