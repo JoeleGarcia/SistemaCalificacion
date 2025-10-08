@@ -48,7 +48,7 @@ namespace SistemaCalificacion.Application.Services
 
             if (response is null)
             {
-                return null;
+                return null!;
             }
 
             await _sessionManagerRepository.SignInAsync(response);

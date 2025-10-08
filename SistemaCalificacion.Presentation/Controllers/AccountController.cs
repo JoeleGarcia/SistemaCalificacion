@@ -44,9 +44,9 @@ namespace SistemaCalificacion.Presentation.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             var sessionActive = GetSession();
 
-            if (sessionActive != null)
+            if (User.Identity != null && User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Index", "Home");
+                return LocalRedirect("/");
             }
 
             return View();
@@ -111,12 +111,12 @@ namespace SistemaCalificacion.Presentation.Controllers
         [HttpGet]
         public IActionResult Register()
         {
-            var sessionActive = GetSession();
+            //var sessionActive = GetSession();
 
-            if (sessionActive != null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
+            //if (sessionActive != null)
+            //{
+            //    return RedirectToAction("Index", "Home");
+            //}
             return View();
         }
 
@@ -133,7 +133,7 @@ namespace SistemaCalificacion.Presentation.Controllers
                 var isRegistered = await _loginService.RegisterAsync(registerUserDto);
                 if (isRegistered)
                 {
-                    SetSession(registerUserDto.Username);
+                    //SetSession(registerUserDto.Username);
                     TempData["SuccessMessage"] = "Registration successful!";
                     return RedirectToAction("Index", "Home");
                 }
