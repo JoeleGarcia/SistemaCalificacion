@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using SistemaCalificacion.Application.DTOs;
 using SistemaCalificacion.Application.Exceptions;
@@ -17,36 +18,53 @@ namespace SistemaCalificacion.Application.Services
     {
         private readonly IEstudianteRepository _estudianteRepository;
         private readonly IPasswordGenerator _PasswordGeneratorRepository;
+        private readonly IMapper _mapper;
 
 
-        public EstudianteService(IEstudianteRepository estudianteRepository , IPasswordGenerator passwordGenerator)
+        public EstudianteService(IEstudianteRepository estudianteRepository , IPasswordGenerator passwordGenerator, IMapper mapper)
         {
             _estudianteRepository = estudianteRepository;
             _PasswordGeneratorRepository = passwordGenerator;
+            _mapper = mapper;
         }
 
-        public async Task<EstudianteDto> AddEstudianteAsync(EstudianteDto estudiante)
+        public async Task<CreateEstudianteDto> AddEstudianteAsync(CreateEstudianteDto estudiante)
         {
 
 
             try
             {
-                var _estudiante = new Estudiante(
-                
-                    nombre: estudiante.Nombre,
-                    apellido: estudiante.Apellido,
-                    username: estudiante.Username,
-                    password: _PasswordGeneratorRepository.GenerarPassword(),
-                    emailInsitucional: estudiante.EmailInstitucional,
-                    emailPersonal: estudiante.EmailPersonal,
-                    carrera: estudiante.Carrera,
-                    cedula: estudiante.Cedula,
-                    matricula: estudiante.Matricula                    
+                //var _estudiante = new Estudiante(
 
-                );
+                //    nombre: estudiante.Nombre,
+                //    apellido: estudiante.Apellido,
+                //    username: estudiante.Username,
+                //    password: _PasswordGeneratorRepository.GenerarPassword(),
+                //    emailInsitucional: estudiante.EmailInstitucional,
+                //    emailPersonal: estudiante.EmailPersonal,
+                //    carrera: estudiante.Carrera,
+                //    cedula: estudiante.Cedula,
+                //    matricula: estudiante.Matricula                    
+
+                //);
+                var _estudiante = new Estudiante { 
+
+
+                    Nombre = estudiante.Nombre,
+                    Apellido = estudiante.Apellido,
+                    Username = estudiante.Username,
+                    Password = _PasswordGeneratorRepository.GenerarPassword(),
+                    EmailInsitucional = estudiante.EmailInstitucional,
+                    EmailPersonal = estudiante.EmailPersonal,
+                    Carrera = estudiante.Carrera,
+                    Cedula = estudiante.Cedula,
+                    Matricula = estudiante.Matricula,
+                    
+
+                };
 
                 var estudianteAgregado = await _estudianteRepository.AddEstudianteAsync(_estudiante);
-                return new EstudianteDto(estudianteAgregado.Id , estudianteAgregado.Nombre, estudianteAgregado.Apellido, estudianteAgregado.Username, estudianteAgregado.EmailInsitucional, estudianteAgregado.EmailPersonal, estudianteAgregado.Password, estudianteAgregado.Matricula, estudianteAgregado.Cedula, estudianteAgregado.Carrera, estudianteAgregado.Role, estudianteAgregado.Status);
+                return new CreateEstudianteDto(estudianteAgregado.Id , estudianteAgregado.Nombre, estudianteAgregado.Apellido, estudianteAgregado.Username, estudianteAgregado.EmailInsitucional, estudianteAgregado.EmailPersonal, estudianteAgregado.Matricula, estudianteAgregado.Cedula, estudianteAgregado.Carrera, estudianteAgregado.Role, estudianteAgregado.Status);
             
             }
             catch (InfrastructureException ex)

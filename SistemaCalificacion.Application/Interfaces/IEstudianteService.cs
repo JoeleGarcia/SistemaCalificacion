@@ -10,7 +10,7 @@ namespace SistemaCalificacion.Application.Interfaces
 {
     public interface IEstudianteService
     {
-        Task<EstudianteDto> AddEstudianteAsync(EstudianteDto estudiante);
+        Task<CreateEstudianteDto> AddEstudianteAsync(CreateEstudianteDto estudiante);
         Task<bool> UpdateEstudianteAsync(Guid Id, UpdateEstudianteDto updateEstudiante);
         Task DeleteEstudianteByIdAsync(Guid Id);
         Task<IEnumerable<EstudianteDto>> GetAllEstudianteAsync();
