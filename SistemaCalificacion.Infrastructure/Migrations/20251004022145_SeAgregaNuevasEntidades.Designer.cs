@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SistemaCalificacion.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using SistemaCalificacion.Infrastructure.Data;
 namespace SistemaCalificacion.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251004022145_SeAgregaNuevasEntidades")]
+    partial class SeAgregaNuevasEntidades
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,17 +33,17 @@ namespace SistemaCalificacion.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal?>("Calificacion1")
-                        .HasColumnType("decimal(5,2)");
+                    b.Property<int?>("Calificacion1")
+                        .HasColumnType("int");
 
-                    b.Property<decimal?>("Calificacion2")
-                        .HasColumnType("decimal(5,2)");
+                    b.Property<int?>("Calificacion2")
+                        .HasColumnType("int");
 
-                    b.Property<decimal?>("Calificacion3")
-                        .HasColumnType("decimal(5,2)");
+                    b.Property<int?>("Calificacion3")
+                        .HasColumnType("int");
 
-                    b.Property<decimal?>("Calificacion4")
-                        .HasColumnType("decimal(5,2)");
+                    b.Property<int?>("Calificacion4")
+                        .HasColumnType("int");
 
                     b.Property<string>("Clasificacion")
                         .HasColumnType("nvarchar(max)");
@@ -51,14 +54,14 @@ namespace SistemaCalificacion.Infrastructure.Migrations
                     b.Property<Guid>("EstudianteId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal?>("Examen")
-                        .HasColumnType("decimal(5,2)");
+                    b.Property<int?>("Examen")
+                        .HasColumnType("int");
 
                     b.Property<int>("MateriaId")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("Total")
-                        .HasColumnType("decimal(5,2)");
+                    b.Property<double?>("Total")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
@@ -66,7 +69,7 @@ namespace SistemaCalificacion.Infrastructure.Migrations
 
                     b.HasIndex("MateriaId");
 
-                    b.ToTable("Calificaciones", (string)null);
+                    b.ToTable("Calificaciones");
                 });
 
             modelBuilder.Entity("SistemaCalificacion.Domain.Entities.Estudiante", b =>
@@ -142,11 +145,11 @@ namespace SistemaCalificacion.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Descripcion")
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Nombre")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
@@ -155,7 +158,7 @@ namespace SistemaCalificacion.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Nombre")
+                    b.HasIndex("Name")
                         .IsUnique();
 
                     b.ToTable("Materia");

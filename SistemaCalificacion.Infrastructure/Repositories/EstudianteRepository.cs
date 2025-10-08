@@ -52,10 +52,8 @@ namespace SistemaCalificacion.Infrastructure.Repositories
             var estudiante = await GetEstudianteByIdAsync(id);
 
             if (estudiante is null)
-            {
                 throw new NotFoundException("Estudiante" , "ById");
-            }
-
+            
             _dbcontext.Estudiante.Remove(estudiante);
             await _dbcontext.SaveChangesAsync();
         }

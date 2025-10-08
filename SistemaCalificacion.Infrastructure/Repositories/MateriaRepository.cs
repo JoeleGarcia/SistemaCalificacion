@@ -1,5 +1,9 @@
-﻿using SistemaCalificacion.Domain.Entities;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using SistemaCalificacion.Application.Exceptions;
+using SistemaCalificacion.Domain.Entities;
 using SistemaCalificacion.Domain.Interfaces;
+using SistemaCalificacion.Infrastructure.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,29 +14,65 @@ namespace SistemaCalificacion.Infrastructure.Repositories
 {
     public class MateriaRepository : IMateriaRepository
     {
-        public Task<Materia> CreateMateriaAsync(Materia materia)
+        private readonly ApplicationDbContext _dbcontext;
+
+        public MateriaRepository(ApplicationDbContext dbcontext)
         {
-            throw new NotImplementedException();
+            _dbcontext = dbcontext;
         }
 
-        public Task DeleteMateriaAsync(Materia materia)
+        public async Task<Materia> AddMateriaAsync(Materia materia)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _dbcontext.Materia.AddAsync(materia);
+                await _dbcontext.SaveChangesAsync();
+                return materia;
+            }
+            catch (SqlException ex) when (ex.Number == -2)
+            {
+                throw new InfrastructureException("Timeout al consultar la base de datos", ex);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new InfrastructureException("Error en la consulta de Materia", ex);
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new InfrastructureException(ex.Message, ex);
+            }
+            catch (Exception ex)
+            {
+                throw new InfrastructureException("Error inesperado en la base de datos", ex);
+            }
+
         }
 
-        public Task<IEnumerable<Materia>> GetAllMateriatsAsync()
+        public async Task DeleteMateriaAsync(int id)
         {
-            throw new NotImplementedException();
+            var _materia = await GetMateriaByIdAsync(id);
+
+            if (_materia is null)
+                throw new NotFoundException("Estudiante", string.Format("By Id {id}" , id) );
+
+            _dbcontext.Materia.Remove(_materia);
+            await _dbcontext.SaveChangesAsync();
         }
 
-        public Task<Materia> GetMateriaByIdAsync(int id)
+        public async Task<IEnumerable<Materia>> GetAllMateriaAsync()
         {
-            throw new NotImplementedException();
+            return await _dbcontext.Materia.ToListAsync();
         }
 
-        public Task UpdateMateriaAsync(Materia materia)
+        public async Task<Materia?> GetMateriaByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _dbcontext.Materia.FindAsync(id);
+        }
+
+        public async Task UpdateMateriaAsync(Materia materia)
+        {
+            _dbcontext.Materia.Update(materia);
+            await _dbcontext.SaveChangesAsync();
         }
     }
 }
