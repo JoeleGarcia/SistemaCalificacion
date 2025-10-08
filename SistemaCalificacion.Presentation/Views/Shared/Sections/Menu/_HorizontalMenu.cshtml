@@ -17,8 +17,14 @@
       </li>
       <li class='menu-item@(currentPage == "/Estudiantes" ? " active" : "")'>
         <a asp-controller="Estudiantes" asp-action="Index" class="menu-link">
-          <i class="menu-icon icon-base ri ri-user-line"></i>
+          <i class="menu-icon icon-base ri ri-graduation-cap-line"></i>
           <div data-i18n="Estudiantes">Estudiantes</div>
+        </a>
+      </li>
+      <li class='menu-item@(currentPage == "/Materias" ? " active" : "")'>
+        <a asp-controller="Materias" asp-action="Index" class="menu-link">
+          <i class="menu-icon icon-base ri ri-book-open-line"></i>
+          <div data-i18n="Materias">Materias</div>
         </a>
       </li>
     </ul>
