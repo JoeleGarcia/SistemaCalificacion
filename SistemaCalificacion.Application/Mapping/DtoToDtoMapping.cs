@@ -18,6 +18,9 @@ namespace SistemaCalificacion.Application.Mapping
 
             CreateMap<MateriaDto, UpdateMateriaDto>();
 
+            CreateMap<CalificacionesDto, UpdateCalificacionesDto>();
+
+
         }
 
     }

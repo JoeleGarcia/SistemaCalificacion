@@ -14,6 +14,9 @@ namespace SistemaCalificacion.Application.Mapping
         public DtoToDomainMapping() {
 
             CreateMap<CreateMateriaDto, Materia>();
+            CreateMap<UpdateCalificacionesDto, Calificaciones>();
+            CreateMap<CreateCalificacionesDto, Calificaciones>();
+
 
         }
     }

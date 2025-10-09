@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using SistemaCalificacion.Application.Exceptions;
 using SistemaCalificacion.Domain.Entities;
 using SistemaCalificacion.Domain.Interfaces;
 using SistemaCalificacion.Infrastructure.Data;
@@ -18,14 +20,41 @@ namespace SistemaCalificacion.Infrastructure.Repositories
         {
             _dbcontext = dbcontext;
         }
-        public Task<Calificaciones> AddCalificacionAsync(Calificaciones calificaciones)
+        public async Task<Calificaciones> AddCalificacionAsync(Calificaciones calificaciones)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _dbcontext.Calificaciones.AddAsync(calificaciones);
+                await _dbcontext.SaveChangesAsync();
+                return calificaciones;
+            }
+            catch (SqlException ex) when (ex.Number == -2)
+            {
+                throw new InfrastructureException("Timeout al consultar la base de datos", ex);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new InfrastructureException("Error en la Operacion Guardando Calificacion", ex);
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new InfrastructureException(ex.Message, ex);
+            }
+            catch (Exception ex)
+            {
+                throw new InfrastructureException("Error inesperado en la base de datos", ex);
+            }
         }
 
-        public Task DeleteCalificacionAsync(int id)
+        public async Task DeleteCalificacionAsync(int id)
         {
-            throw new NotImplementedException();
+            var _calificaciones = await GetCalificacionByIdAsync(id);
+
+            if (_calificaciones is null)
+                throw new NotFoundException("Estudiante", string.Format("By Id {0}", id.ToString()));
+
+            _dbcontext.Calificaciones.Remove(_calificaciones);
+            await _dbcontext.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Calificaciones>> GetAllCalificacionesAsync()
@@ -36,14 +65,15 @@ namespace SistemaCalificacion.Infrastructure.Repositories
                         .ToListAsync();
         }
 
-        public Task<Calificaciones?> GetCalificacionByIdAsync(int id)
+        public async Task<Calificaciones?> GetCalificacionByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _dbcontext.Calificaciones.FindAsync(id);
         }
 
-        public Task UpdateCalificacionAsync(Calificaciones calificaciones)
+        public async Task UpdateCalificacionAsync(Calificaciones calificaciones)
         {
-            throw new NotImplementedException();
+            _dbcontext.Calificaciones.Update(calificaciones);
+            await _dbcontext.SaveChangesAsync();
         }
     }
 }

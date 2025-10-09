@@ -1,0 +1,88 @@
+﻿@model SistemaCalificacion.Application.DTOs.CreateCalificacionesDto
+
+@{
+
+    ViewData["Title"] = "Add - Materia";
+
+    var _addError = ViewData.ModelState["_addError"]?.Errors
+    .Select(e => e.ErrorMessage).FirstOrDefault(); ;
+}
+
+@section VendorStyles {
+
+    <link rel="stylesheet" href="~/vendor/libs/select2/select2.css" />
+    <link rel="stylesheet" href="~/vendor/libs/tagify/tagify.css" />
+    <link rel="stylesheet" href="~/vendor/libs/bootstrap-select/bootstrap-select.css" />
+    <link rel="stylesheet" href="~/vendor/libs/typeahead-js/typeahead.css" />
+}
+
+@section VendorScripts {
+
+    <script src="~/vendor/libs/select2/select2.js"></script>
+    <script src="~/vendor/libs/tagify/tagify.js"></script>
+    <script src="~/vendor/libs/bootstrap-select/bootstrap-select.js"></script>
+    <script src="~/vendor/libs/typeahead-js/typeahead.js"></script>
+    <script src="~/vendor/libs/bloodhound/bloodhound.js"></script>
+
+    <script src="~/js/main.js"></script>
+
+    <script src="~/js/forms-selects.js"></script>
+    <script src="~/js/forms-tagify.js"></script>
+
+}
+
+<form asp-action="Add" method="post">
+
+    <div class="form-floating form-floating-outline">
+        <select asp-for="EstudianteId" asp-items="ViewBag.Estudiantes" id="select2Basic" data-placeholder="Seleccione un Estudiante" class="form-control select2 form-select" data-allow-clear="true">
+            <option value="">Seleccione un estudiante</option>
+        </select>
+        <label for="select2Basic" class="form-label">Estudiantes</label>
+        <span asp-validation-for="EstudianteId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="MateriaId">Materia</label>
+        <select asp-for="MateriaId" asp-items="ViewBag.Materias" class="form-control"></select>
+        @*<input asp-for="MateriaId" class="form-control" />*@
+        <span asp-validation-for="MateriaId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Calificacion1">Primera Calificación</label>
+        <input asp-for="Calificacion1" class="form-control" />
+        <span asp-validation-for="Calificacion1" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Calificacion2">Segunda Calificación</label>
+        <input asp-for="Calificacion2" class="form-control" />
+        <span asp-validation-for="Calificacion2" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Calificacion3">Tercera Calificación</label>
+        <input asp-for="Calificacion3" class="form-control" />
+        <span asp-validation-for="Calificacion3" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Calificacion4">Cuarta Calificación</label>
+        <input asp-for="Calificacion4" class="form-control" />
+        <span asp-validation-for="Calificacion4" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Examen"></label>
+        <input asp-for="Examen" class="form-control" />
+        <span asp-validation-for="Examen" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

@@ -6,3 +6,108 @@
     ViewData["statusClass"] = "";
 
 }
+
+<div class="card">
+    <div class="card-datatable table-responsive pb-0">
+        <table id="transactionsTable" class="table">
+            <thead>
+                <tr class="text-nowrap">
+                    <th></th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Materia.Nombre)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Estudiante.Nombre)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Examen)
+                    </th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model?.Any() == true)
+                {
+                    @foreach (var materias in Model)
+                    {
+                        string statusClass = "info"; // Default value if item.Status is null or doesn't match any case
+
+                        var lowerCaseStatus = materias.Estado;
+
+                        if (lowerCaseStatus.Equals("Aprobado"))
+                        {
+                            statusClass = "success";
+                        }
+                        else if (lowerCaseStatus.Equals("Reprobado"))
+                        {
+                            statusClass = "warning";
+                        }
+
+                        <tr>
+                            <td></td>
+                            <td class="text-nowrap fw-medium text-heading">
+                                @Html.DisplayFor(modelItem => materias.Estudiante.Nombre)
+                            </td>
+                            <td class="text-nowrap fw-medium text-heading">
+                                @Html.DisplayFor(modelItem => materias.Materia.Nombre)
+                            </td>
+                            <td>
+                                <div class="badge bg-label-@statusClass rounded-pill">
+
+                                    @if (materias.Estado.Equals("Aprobado"))
+                                    {
+                                        @("Activo")
+
+                                    }
+
+                                    @if (materias.Estado.Equals("Reprobado"))
+                                    {
+                                        @("Inactivo")
+                                    }
+                                    @("Pendiente")
+                                    <span class=" badge badge-center rounded-pill text-bg-danger" >44</span>
+                                </div>
+                            </td>
+                            <td class="text-nowrap">
+                                <a asp-action="Update" asp-route-id="@materias.Id" class="btn btn-sm btn-text-secondary rounded-pill btn-icon shadow-none"><i class='icon-base ri ri-edit-line icon-18px'></i></a>
+                                <a href="/Calificaciones/Delete/@materias.Id" class="btn btn-sm btn-text-secondary rounded-pill btn-icon shadow-none delete-transaction" data-transaction-username="@Html.DisplayFor(modelItem => materias.Id)"><i class="icon-base ri ri-delete-bin-5-line icon-18px"></i></a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasAddUser" aria-labelledby="offcanvasAddUserLabel">
+        <div class="offcanvas-header border-bottom">
+            <h5 id="offcanvasAddUserLabel" class="offcanvas-title">Agregar Calificacion</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body mx-0 flex-grow-0 h-100">
+
+            <form asp-action="Add" asp-controller="Calificaciones" method="post">
+                <div class="form-group">
+                    <label for="Nombre">Nombre</label>
+                    <input type="text" name="Nombre" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                    <label for="Descripcion">Descripcion</label>
+                    <input type="text" name="Descripcion" class="form-control" />
+                </div>
+                <div class="form-group form-check">
+                    <input class="form-check-input" type="checkbox" data-val="true" data-val-required="The Status field is required." id="Status" name="Status" value="true">
+                    <label class="form-check-label" for="Status">Status</label>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Crear" class="btn btn-primary" />
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+</div>

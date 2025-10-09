@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using SistemaCalificacion.Application.DTOs;
+using SistemaCalificacion.Application.Exceptions;
 using SistemaCalificacion.Application.Interfaces;
 using SistemaCalificacion.Domain.Entities;
 using SistemaCalificacion.Domain.Interfaces;
@@ -21,14 +22,28 @@ namespace SistemaCalificacion.Application.Services
             _calificacionesRepository = calificacionesRepository;
             _mapper = mapper;
         }
-        public Task<CreateCalificacionesDto> AddCalificacionesAsync(CreateCalificacionesDto createCalificacionesDto)
+        public async Task<CreateCalificacionesDto> AddCalificacionesAsync(CreateCalificacionesDto createCalificacionesDto)
         {
-            throw new NotImplementedException();
+            //try
+            //{
+                var _createCalificacion = _mapper.Map<Calificaciones>(createCalificacionesDto);
+                _createCalificacion.Estado = "Pendiente";
+                var _calificacionAgregado = await _calificacionesRepository.AddCalificacionAsync(_createCalificacion);
+
+            var calificacion = _mapper.Map<CreateCalificacionesDto>(_calificacionAgregado);
+                
+                return calificacion;
+
+            //}
+            //catch (InfrastructureException ex)
+            //{
+            //    throw new ApplicationException("No se pudo registrar el usuario. Intente más tarde.", ex);
+            //}
         }
 
-        public Task DeleteCalificacionesAsync(int id)
+        public async Task DeleteCalificacionesAsync(int id)
         {
-            throw new NotImplementedException();
+            await _calificacionesRepository.DeleteCalificacionAsync(id);
         }
 
         public async Task<IEnumerable<SelectCalificacionesDto>> GetAllCalificacionesAsync()
@@ -41,14 +56,34 @@ namespace SistemaCalificacion.Application.Services
 
         }
 
-        public Task<CalificacionesDto> GetCalificacionesByIdAsync(int id)
+        public async Task<CalificacionesDto> GetCalificacionesByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var _calificaciones = await _calificacionesRepository.GetCalificacionByIdAsync(id);
+
+            var calificacionesDto = _mapper.Map<CalificacionesDto>(_calificaciones);
+
+            return calificacionesDto;
         }
 
-        public Task UpdateCalificacionesAsync(int id, UpdateCalificacionesDto updateCalificacionesDto)
+        public async Task UpdateCalificacionesAsync(int id, UpdateCalificacionesDto updateCalificacionesDto)
         {
-            throw new NotImplementedException();
+            var _calificaciones = await _calificacionesRepository.GetCalificacionByIdAsync(id);
+
+            if (_calificaciones is null)
+            {
+                throw new NotFoundException("Calificaion", id);
+            }
+
+            _calificaciones.Calificacion1 = updateCalificacionesDto.Calificacion1;
+            _calificaciones.Calificacion2 = updateCalificacionesDto.Calificacion2;
+            _calificaciones.Calificacion3 = updateCalificacionesDto.Calificacion3;
+            _calificaciones.Calificacion4 = updateCalificacionesDto.Calificacion4;
+
+            _calificaciones.MateriaId = updateCalificacionesDto.MateriaId;
+            _calificaciones.EstudianteId = updateCalificacionesDto.EstudianteId;
+            _calificaciones.Examen  =   updateCalificacionesDto.Examen;
+
+            await _calificacionesRepository.UpdateCalificacionAsync(_calificaciones);
         }
     }
 }

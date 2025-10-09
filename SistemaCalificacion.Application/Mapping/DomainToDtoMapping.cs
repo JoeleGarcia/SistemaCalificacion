@@ -30,7 +30,13 @@ namespace SistemaCalificacion.Application.Mapping
             CreateMap<Materia, MateriaDto>();
 
             CreateMap<Calificaciones, SelectCalificacionesDto>();
-      
+
+            CreateMap<Calificaciones, CalificacionesDto>();
+
+            CreateMap<Calificaciones, CreateCalificacionesDto>();
+
+
+
         }
     }
 }
