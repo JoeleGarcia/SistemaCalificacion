@@ -59,6 +59,7 @@ namespace SistemaCalificacion.Application.Services
                     Carrera = estudiante.Carrera,
                     Cedula = estudiante.Cedula,
                     Matricula = estudiante.Matricula,
+                    Status = estudiante.Status,
                     
 
                 };

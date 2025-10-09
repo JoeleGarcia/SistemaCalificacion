@@ -103,13 +103,13 @@ namespace SistemaCalificacion.Presentation.Controllers
             catch (NotFoundException ex)
             {
                 _logger.LogError(ex, "Error");
-                ModelState.AddModelError(string.Empty, "Username o password no son válidos.");
+                ModelState.AddModelError("_addError", "Username o password no son válidos.");
                 return View("Add", createEstudianteDto);
             }
             catch (ApplicationException ex)
             {
                 _logger.LogError(ex, "Error {Username}", ex.Message);
-                ModelState.AddModelError(string.Empty, ex.Message);
+                ModelState.AddModelError("_addError", ex.Message);
                 return View("Add", createEstudianteDto);
             }
             catch (Exception ex)
