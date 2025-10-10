@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
                   buttons: [
                     {
                       extend: 'print',
-                      title: 'Users',
+                      title: 'Estudiantes',
                       text: '<i class="icon-base ri ri-printer-line me-2" ></i>Print',
                       className: 'dropdown-item',
                       exportOptions: {
@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
                     },
                     {
                       extend: 'csv',
-                      title: 'Users',
+                      title: 'Estudiantes',
                       text: '<i class="icon-base ri ri-file-text-line me-2" ></i>Csv',
                       className: 'dropdown-item',
                       exportOptions: {
@@ -185,7 +185,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
                     },
                     {
                       extend: 'pdf',
-                      title: 'Users',
+                      title: 'Estudiantes',
                       text: '<i class="icon-base ri ri-file-pdf-line me-2"></i>Pdf',
                       className: 'dropdown-item',
                       exportOptions: {
@@ -223,7 +223,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
                     },
                     {
                       extend: 'copy',
-                      title: 'Users',
+                      title: 'Estudiantes',
                       text: '<i class="icon-base ri ri-file-copy-line me-2" ></i>Copy',
                       className: 'dropdown-item',
                       exportOptions: {
