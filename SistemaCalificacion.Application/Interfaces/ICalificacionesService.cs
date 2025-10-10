@@ -1,4 +1,5 @@
 ﻿using SistemaCalificacion.Application.DTOs;
+using SistemaCalificacion.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,6 @@ namespace SistemaCalificacion.Application.Interfaces
         Task<CreateCalificacionesDto> AddCalificacionesAsync(CreateCalificacionesDto createCalificacionesDto);
         Task UpdateCalificacionesAsync(int id, UpdateCalificacionesDto updateCalificacionesDto);
         Task DeleteCalificacionesAsync(int id);
+        decimal CalcularTotalCalificacion(Calificaciones calificaciones);
     }
 }

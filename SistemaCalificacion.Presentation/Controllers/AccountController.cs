@@ -81,6 +81,7 @@ namespace SistemaCalificacion.Presentation.Controllers
 
                 _logger.LogWarning("Intento de login fallido para el usuario {Username}", loginUserDto.Email);
                 ModelState.AddModelError(string.Empty, "Verificar Username or password");
+                TempData["Error"] = "Username o password no son válidos.";
 
                 return View("Login");
 
@@ -89,12 +90,16 @@ namespace SistemaCalificacion.Presentation.Controllers
             {
                 _logger.LogError(ex, "Error");
                 ModelState.AddModelError(string.Empty, "Username o password no son válidos.");
+                TempData["Error"] = "Username o password no son válidos.";
+
                 return View("Login");
             }
             catch (ApplicationException ex)
             {
                 _logger.LogError(ex, "Error");
                 ModelState.AddModelError(string.Empty, "Username o password no son válidos.");
+                TempData["Error"] = "Username o password no son válidos.";
+
                 return View("Login");
 
             }
@@ -102,7 +107,9 @@ namespace SistemaCalificacion.Presentation.Controllers
             {
                 _logger.LogError(ex, "Error en Login para el usuario {Username}", loginUserDto?.Email);
 
-                TempData["ErrorMessage"] = "Ocurrió un error inesperado. Intente nuevamente.";
+                //TempData["ErrorMessage"] = "Ocurrió un error inesperado. Intente nuevamente.";
+                TempData["Error"] = "Ocurrió un error inesperado. Intente nuevamente.";
+
                 return RedirectToAction("Error", "Home");
             }
 
@@ -134,7 +141,7 @@ namespace SistemaCalificacion.Presentation.Controllers
                 if (isRegistered)
                 {
                     //SetSession(registerUserDto.Username);
-                    TempData["SuccessMessage"] = "Registration successful!";
+                    TempData["SuccessMessage"] = "Registro realizado con éxito!.. Por favor Inicie sesion";
                     return RedirectToAction("Index", "Home");
                 }
 
@@ -157,7 +164,7 @@ namespace SistemaCalificacion.Presentation.Controllers
             {
                 _logger.LogError(ex, "Error en registrar el usuario {Username}", registerUserDto?.Email);
 
-                TempData["ErrorMessage"] = ex.Message;
+                TempData["Error"] = ex.Message;
                 return RedirectToAction("Error", "Home");
             }
             

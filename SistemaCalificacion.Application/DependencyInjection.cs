@@ -27,6 +27,15 @@ namespace SistemaCalificacion.Application
             services.AddScoped<IValidator<LoginUserDto>, LoginUserDtoValidator>();
             services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
             services.AddScoped<IValidator<UserDto>, UserDtoValidator>();
+
+            services.AddScoped<IValidator<UpdateCalificacionesDto>, UpdateCalificacionesDtoValidator>();
+            services.AddScoped<IValidator<CreateCalificacionesDto>, CreateCalificacionesDtoValidator>();
+
+            services.AddScoped<IValidator<UpdateEstudianteDto>, UpdateEstudianteDtoValidator>();
+            services.AddScoped<IValidator<CreateEstudianteDto>, CreateEstudianteDtoValidator>();
+
+
+
             services.AddAutoMapper(typeof(DependencyInjection).Assembly);
 
             services.AddFluentValidationAutoValidation();

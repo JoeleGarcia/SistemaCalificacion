@@ -5,6 +5,7 @@ using SistemaCalificacion.Application.DTOs;
 using SistemaCalificacion.Application.Exceptions;
 using SistemaCalificacion.Application.Interfaces;
 using SistemaCalificacion.Application.Services;
+using SistemaCalificacion.Domain.Entities;
 using System.Linq;
 
 namespace SistemaCalificacion.Presentation.Controllers
@@ -20,16 +21,26 @@ namespace SistemaCalificacion.Presentation.Controllers
 
         public CalificacionesController(ILogger<AccountController> logger, ICalificacionesService calificacionesService, IMapper mapper, IMateriaService materiaService, IEstudianteService estudianteService)
         {
-            _logger = logger;
-            _calificacionesService = calificacionesService;
-            _mapper = mapper;
-            _materiaService = materiaService;
-            _estudianteService = estudianteService;
+            _logger                 = logger;
+            _calificacionesService  = calificacionesService;
+            _mapper                 = mapper;
+            _materiaService         = materiaService;
+            _estudianteService      = estudianteService;
         }
         public async Task<IActionResult> Index()
         {
-            var _calificaciones = await _calificacionesService.GetAllCalificacionesAsync();
+            var _calificaciones     = await _calificacionesService.GetAllCalificacionesAsync();
+            var _estudiantes        = await _estudianteService.GetAllEstudianteAsync();
 
+            ViewData["Materias"]    = new SelectList(await _materiaService.GetAllMateriaAsync(), "Id", "Nombre");
+            ViewData["Estudiantes"] = new SelectList(
+                _estudiantes.Select(m => new {
+                    Value = m.Id,
+                    Text = $"{m.Nombre} {m.Apellido} - {m.Matricula}"
+                }),
+                "Value",
+                "Text"
+            );
             return View(_calificaciones);
         }
 
@@ -101,6 +112,19 @@ namespace SistemaCalificacion.Presentation.Controllers
         {
             try
             {
+                var _materias = await _materiaService.GetAllMateriaAsync();
+                var _estudiantes = await _estudianteService.GetAllEstudianteAsync();
+
+                ViewData["Materias"] = new SelectList(await _materiaService.GetAllMateriaAsync(), "Id", "Nombre");
+                ViewData["Estudiantes"] = new SelectList(
+                    _estudiantes.Select(m => new {
+                        Value = m.Id,
+                        Text = $"{m.Nombre} {m.Apellido} - {m.Matricula}"
+                    }),
+                    "Value",
+                    "Text"
+                );
+
                 if (!ModelState.IsValid)
                 {
                     return View("Add", createCalificacionesDto);
@@ -132,8 +156,22 @@ namespace SistemaCalificacion.Presentation.Controllers
         }
         [HttpGet]
         public async Task<IActionResult> Update(int id)
-        {          
+        {
+
+            if (id <= 0)
+            {
+                TempData["MateriaError"] = "El identificador no es válido.";
+                return RedirectToAction(nameof(Index));
+            }
+
             var _calificaciones = await _calificacionesService.GetCalificacionesByIdAsync(id);
+            
+            if (_calificaciones is null)
+            {
+                TempData["MateriaError"] = string.Format("No existe el id {0} que quiere actulizar" , id);
+                return RedirectToAction(nameof(Index));
+            }
+
             var updateCalificaciones = _mapper.Map<UpdateCalificacionesDto>(_calificaciones);
 
             var _materias = await _materiaService.GetAllMateriaAsync();
@@ -156,9 +194,24 @@ namespace SistemaCalificacion.Presentation.Controllers
         [HttpPost]
         public async Task<IActionResult> Update(int id, UpdateCalificacionesDto updateCalificacionesDto)
         {
+
+            var _materias = await _materiaService.GetAllMateriaAsync();
+            var _estudiantes = await _estudianteService.GetAllEstudianteAsync();
+
+            ViewData["Materias"] = new SelectList(await _materiaService.GetAllMateriaAsync(), "Id", "Nombre");
+            ViewData["Estudiantes"] = new SelectList(await _estudianteService.GetAllEstudianteAsync(), "Id", "Nombre");
+            ViewData["Estudiantes"] = new SelectList(
+                _estudiantes.Select(m => new {
+                    Value = m.Id,
+                    Text = $"{m.Nombre} {m.Apellido} - {m.Matricula}"
+                }),
+                "Value",
+                "Text"
+            );
+
             if (!ModelState.IsValid)
             {
-                return View("Add", updateCalificacionesDto);
+                return View("Update", updateCalificacionesDto);
             }
 
             await _calificacionesService.UpdateCalificacionesAsync(id, updateCalificacionesDto);

@@ -95,7 +95,7 @@ namespace SistemaCalificacion.Presentation.Controllers
 
         private void SetSuccessToast(string message, string cssClass)
         {
-            // Add success toast message for the current operation
+
             TempData["TransactionsToast"] = JsonConvert.SerializeObject(new List<TransactionsToast>
             {
                 new TransactionsToast
