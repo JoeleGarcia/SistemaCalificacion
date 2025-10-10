@@ -7,6 +7,51 @@
 
 }
 
+
+@section VendorStyles {
+    <link rel="stylesheet" href="~/vendor/libs/select2/select2.css" />
+    <link rel="stylesheet" href="~/vendor/libs/tagify/tagify.css" />
+    <link rel="stylesheet" href="~/vendor/libs/bootstrap-select/bootstrap-select.css" />
+    <link rel="stylesheet" href="~/vendor/libs/datatables-bs5/datatables.bootstrap5.css" />
+    <link rel="stylesheet" href="~/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css" />
+    <link rel="stylesheet" href="~/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css" />
+    <link rel="stylesheet" href="~/vendor/libs/sweetalert2/sweetalert2.css" />
+    <link rel="stylesheet" href="~/vendor/libs/&#64;form-validation/form-validation.css" />
+}
+
+@section VendorScripts {
+    <script src="~/vendor/libs/moment/moment.js"></script>
+    <script src="~/vendor/libs/datatables-bs5/datatables-bootstrap5.js"></script>
+    <script src="~/vendor/libs/select2/select2.js"></script>
+    <script src="~/vendor/libs/tagify/tagify.js"></script>
+    <script src="~/vendor/libs/bootstrap-select/bootstrap-select.js"></script>
+    <script src="~/vendor/libs/sweetalert2/sweetalert2.js"></script>
+    <script src="~/vendor/libs/&#64;form-validation/popular.js"></script>
+    <script src="~/vendor/libs/&#64;form-validation/bootstrap5.js"></script>
+    <script src="~/vendor/libs/&#64;form-validation/auto-focus.js"></script>
+    <script src="~/vendor/libs/cleave-zen/cleave-zen.js"></script>
+}
+
+
+@section PageScripts {
+    <script src="~/js/calificaciones-delete.js"></script>
+    <script src="~/js/calificaciones-list.js"></script>
+
+    <script src="~/js/main.js"></script>
+
+    <script src="~/js/forms-selects.js"></script>
+    <script src="~/js/forms-tagify.js"></script>
+}
+
+@if (TempData["MateriaError"] is string msg)
+{
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        @msg
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    @TempData.Remove("MateriaError");
+}
+
 <div class="card">
     <div class="card-datatable table-responsive pb-0">
         <table id="transactionsTable" class="table">
@@ -14,13 +59,34 @@
                 <tr class="text-nowrap">
                     <th></th>
                     <th>
-                        @Html.DisplayNameFor(model => model.Materia.Nombre)
+                        Nombre Completo
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.Estudiante.Nombre)
+                        Materia
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.Examen)
+                        Calificion 1
+                    </th>
+                    <th>
+                        Calificion 2
+                    </th>
+                    <th>
+                        Calificion 3
+                    </th>
+                    <th>
+                        Calificion 4
+                    </th>
+                    <th>
+                        Examen
+                    </th>
+                    <th>
+                        Total
+                    </th>
+                    <th>
+                        Calificacion
+                    </th>
+                    <th>
+                        Estado
                     </th>
                     <th>Actions</th>
                 </tr>
@@ -46,26 +112,143 @@
                         <tr>
                             <td></td>
                             <td class="text-nowrap fw-medium text-heading">
-                                @Html.DisplayFor(modelItem => materias.Estudiante.Nombre)
+                                @Html.DisplayFor(modelItem => materias.Estudiante.Nombre) @Html.DisplayFor(modelItem => materias.Estudiante.Apellido)
                             </td>
                             <td class="text-nowrap fw-medium text-heading">
-                                @Html.DisplayFor(modelItem => materias.Materia.Nombre)
+                                @Html.DisplayFor(modelItem => materias.Materia.Nombre) - @Html.DisplayFor(modelItem => materias.Materia.Descripcion)
+                            </td>
+                            <td class="text-nowrap fw-medium text-heading" style="text-align: center">
+                                <span class="start-100 @switch (materias.Calificacion1)
+                                        {
+                                            case >= 90:
+                                                    @("badge rounded-pill bg-label-success");
+                                                break;
+                                            case >= 80:
+                                                    @("badge rounded-pill bg-label-success");
+                                                break;
+                                            case >= 70:
+                                                    @("badge rounded-pill bg-label-warning");
+                                                break;
+                                            case < 70 :
+                                                    @("badge rounded-pill bg-label-danger");
+                                                break;
+                                            default:
+                                                    @("");
+                                                break;
+                                        }">
+                                    @Html.DisplayFor(modelItem => materias.Calificacion1)
+                                </span>
+                            </td>
+                            <td class="text-nowrap fw-medium text-heading" style="text-align: center">
+                                <span class="start-100 @switch (materias.Calificacion2)
+                                        {
+                                            case >= 90:
+                                                    @("badge rounded-pill bg-label-success");
+                                                break;
+                                            case >= 80:
+                                                    @("badge rounded-pill bg-label-success");
+                                                break;
+                                            case >= 70:
+                                                    @("badge rounded-pill bg-label-warning");
+                                                break;
+                                            case < 70 :
+                                                    @("badge rounded-pill bg-label-danger");
+                                                break;
+                                            default:
+                                                    @("");
+                                                break;
+                                        }">
+                                    @Html.DisplayFor(modelItem => materias.Calificacion2)
+                                </span>
+                            </td>
+                            <td class="text-nowrap fw-medium text-heading" style="text-align: center">
+                                <span class="start-100 @switch (materias.Calificacion3)
+                                        {
+                                            case >= 90:
+                                                    @("badge rounded-pill bg-label-success");
+                                                break;
+                                            case >= 80:
+                                                    @("badge rounded-pill bg-label-success");
+                                                break;
+                                            case >= 70:
+                                                    @("badge rounded-pill bg-label-warning");
+                                                break;
+                                            case < 70 :
+                                                    @("badge rounded-pill bg-label-danger");
+                                                break;
+                                            default:
+                                                    @("");
+                                                break;
+                                        }">
+                                    @Html.DisplayFor(modelItem => materias.Calificacion3)
+                                </span>
+                            </td>
+                            <td class="text-nowrap fw-medium text-heading" style="text-align: center">
+                                <span class="start-100 @switch (materias.Calificacion4)
+                                        {
+                                            case >= 90:
+                                                    @("badge rounded-pill bg-label-success");
+                                                break;
+                                            case >= 80:
+                                                    @("badge rounded-pill bg-label-success");
+                                                break;
+                                            case >= 70:
+                                                    @("badge rounded-pill bg-label-warning");
+                                                break;
+                                            case < 70 :
+                                                    @("badge rounded-pill bg-label-danger");
+                                                break;
+                                            default:
+                                                    @("");
+                                                break;
+                                        }">
+                                    @Html.DisplayFor(modelItem => materias.Calificacion4)
+                                </span>
+                            </td>
+                            <td class="text-nowrap fw-medium text-heading">
+                                <span class="start-100 badge rounded-pill bg-label-@switch (materias.Examen)
+                                        {
+                                            case >= 90:
+                                                    @("success");
+                                                break;
+                                            case >= 80:
+                                                    @("info");
+                                                break;
+                                            case >= 70:
+                                                    @("warning");
+                                                break;
+                                            default:
+                                                    @("danger");
+                                                break;
+                                        }">
+                                    @Html.DisplayFor(modelItem => materias.Examen)
+                                </span>
+                            </td>
+                            <td class="text-nowrap fw-medium text-heading">
+                                @Html.DisplayFor(modelItem => materias.Total)
+                            </td>
+                            <td class="text-nowrap fw-medium text-heading">
+                                @Html.DisplayFor(modelItem => materias.Clasificacion)
                             </td>
                             <td>
                                 <div class="badge bg-label-@statusClass rounded-pill">
 
                                     @if (materias.Estado.Equals("Aprobado"))
                                     {
-                                        @("Activo")
+                                        @("Aprobado")
 
                                     }
 
                                     @if (materias.Estado.Equals("Reprobado"))
                                     {
-                                        @("Inactivo")
+                                        @("Reprobado")
                                     }
-                                    @("Pendiente")
-                                    <span class=" badge badge-center rounded-pill text-bg-danger" >44</span>
+
+                                    @if (materias.Estado.Equals("Pendiente"))
+                                    {
+                                        @("Pendiente")
+                                    }
+
                                 </div>
                             </td>
                             <td class="text-nowrap">
@@ -89,25 +272,59 @@
         <div class="offcanvas-body mx-0 flex-grow-0 h-100">
 
             <form asp-action="Add" asp-controller="Calificaciones" method="post">
+
                 <div class="form-group">
-                    <label for="Nombre">Nombre</label>
-                    <input type="text" name="Nombre" class="form-control" />
+                    <label for="MateriaId">Materia</label>
+                    <select name="MateriaId" asp-items="ViewBag.Materias" class="form-control"></select>
+                </div>
+
+                <div class="form-floating form-floating-outline">
+                    <select asp-items="ViewBag.Estudiantes" name="EstudianteId" id="select2Basic" class="form-control select2 form-select" data-allow-clear="true">
+                        <option value="">Seleccione un estudiante</option>
+                    </select>
+                    <label for="select2Basic" class="form-label">Estudiantes</label>
+                </div>
+
+                <div class="form-group">
+                    <label for="Calificacion1">Calificacion #1</label>
+                    <input type="text" name="Calificacion1" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                    <label for="Calificacion2">Calificacion #2</label>
+                    <input type="text" name="Calificacion2" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                    <label for="Calificacion3">Calificacion #3</label>
+                    <input type="text" name="Calificacion3" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                    <label for="Calificacion4">Calificacion #4</label>
+                    <input type="text" name="Calificacion4" class="form-control" />
+                </div>
+
+
+                <div class="form-group">
+                    <label for="Examen">Examen</label>
+                    <input type="text" name="Examen" class="form-control" />
                 </div>
 
                 <div class="form-group">
                     <label for="Descripcion">Descripcion</label>
                     <input type="text" name="Descripcion" class="form-control" />
                 </div>
-                <div class="form-group form-check">
-                    <input class="form-check-input" type="checkbox" data-val="true" data-val-required="The Status field is required." id="Status" name="Status" value="true">
-                    <label class="form-check-label" for="Status">Status</label>
-                </div>
-                <div class="form-group">
-                    <input type="submit" value="Crear" class="btn btn-primary" />
-                </div>
+
+
+
+                <button type="submit" class="btn btn-primary">Guardar</button>
+
             </form>
 
         </div>
     </div>
 
 </div>
+
+
